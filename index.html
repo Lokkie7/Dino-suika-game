@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dino game</title>
+    <meta name="description" content="Dino suika game">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- Шапка сайта -->
+    <header>
+        <nav>
+            <ul>
+                <li><a href="#">Главная</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Основное содержимое -->
+    <main>
+        <div class="container">
+        <h1>suika</h1>
+        <p>Small fruits. Big happy.</p>
+        <div class="score">Score: 1,280</div>
+        <div class="personal-best">Personal Best: 2,460</div>
+        <div class="next-fruit">Up Next: Peach</div>
+        <div class="game-area">
+            <div class="dotted-line"></div>
+            <p style="position: absolute; top: 10px; left: 50%; transform: translateX(-50%);">keep it below here</p>
+        </div>
+        <div class="instructions">
+            <h3>Let’s play</h3>
+            <ol>
+                <li>Aim your fruit: Move left or right to find the perfect spot.</li>
+                <li>Drop it in: Click or tap to let your fruit fall.</li>
+                <li>Match & grow: Two of a kind merge into a bigger fruit.</li>
+            </ol>
+        </div>
+        <button class="button">Replay</button>
+        <div class="footer">A little pause. A little play.<br>Made with love & a splash of sunshine</div>
+    </div>
+    </main>
+
+    <!-- Подвал сайта -->
+    <footer>
+        <p>&copy; 2026 Название компании. Все права защищены.</p>
+    </footer>
+
+    <!-- Подключение JavaScript -->
+    <script src="js/matter.min.js"></script>
+    <script src="js/script.js"></script>
+</body>
+</html>
