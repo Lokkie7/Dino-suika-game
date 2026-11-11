@@ -4,23 +4,6 @@
 
   // ================= НАСТРОЙКИ =================
 
-  // Динозавры от меньшего к большему. При слиянии двух одинаковых
-  // получается следующий в списке.
- // const DINOS = [
- //   { name: 'Компсогнат',   desc: 'Самый маленький.',        r: 18,  color: '#b5d99c', points: 1 },
- //   { name: 'Птеранодон',   desc: 'Парит в небе.',          r: 25,  color: '#8ec5e8', points: 3 },
- //   { name: 'Велоцираптор', desc: 'Быстрый охотник.',        r: 32,  color: '#f5c96b', points: 6 },
- //   { name: 'Пахицефалозавр',    desc: 'Боньк.', r: 40,  color: '#9fd3a8', points: 10 },
- //   { name: 'Диллофозавр',  desc: 'Ночной кошмар.',      r: 48,  color: '#c9a7e0', points: 15 },
- //   { name: 'Тенонтозавр',   desc: 'Лошадка.',             r: 56,  color: '#d9a27a', points: 21 },
- //   { name: 'Карнотавр', desc: 'Динозавр бык.',      r: 64,  color: '#7fb3a6', points: 28 },
- //   { name: 'Кентрозавр',     desc: 'С костяными пластинами.', r: 72,  color: '#e88a7a', points: 36 },
- //   { name: 'Тираннозавр',    desc: 'Король ящеров.',          r: 82,  color: '#6fa3d6', points: 45 },
- //   { name: 'Трицератопс',  desc: 'Король мёртв, да здравствует король',          r: 92,  color: '#e6c94f', points: 55 },
- //   { name: 'Брахиозавр',   desc: 'Гигант.',                 r: 104, color: '#7bb662', points: 66 },
- // ];
-
-
   const DINOS = [
   { name: 'Компсогнат',       desc: 'Самый маленький.',          r: 18,  color: '#b5d99c', points: 1,  sprite: 'images/dino1.png' },
   { name: 'Птеранодон',       desc: 'Парит в небе.',             r: 25,  color: '#8ec5e8', points: 3,  sprite: 'images/dino2.png' },
@@ -41,7 +24,7 @@ DINOS.forEach((d) => {
   d.img.src = d.sprite;
 });
 
-  const SPRITE_SCALE = 1.1; // множитель размера спрайта относительно радиуса; подгоните под картинки
+  const SPRITE_SCALE = 0.9; // множитель размера спрайта относительно радиуса; подгоните под картинки
   const MAX_LEVEL = DINOS.length - 1;
   const SPAWN_LEVELS = 5;          // в начале падают только уровни 0..4
   const DROP_COOLDOWN = 500;       // мс между бросками
@@ -59,7 +42,7 @@ DINOS.forEach((d) => {
     status: document.querySelector('.text-wrapper-8'),
     nextName: document.querySelector('.text-wrapper-13'),
     nextDesc: document.querySelector('.text-wrapper-14'),
-    preview: document.querySelector('.peach-preview'),
+    preview: document.querySelector('.dino-preview'),
     restart: document.querySelector('.replay-button'),
   };
 
@@ -229,13 +212,6 @@ DINOS.forEach((d) => {
     el.curScore.textContent = fmt(score);
     el.bestScore.textContent = fmt(best);
   }
-
- // function updatePreview() {
- //   const d = DINOS[nextLevel];
- //   el.nextName.textContent = d.name;
- //   el.nextDesc.textContent = d.desc;
- //   el.preview.style.backgroundColor = d.color;
-//  }
 
   function updatePreview() {
   const d = DINOS[nextLevel];

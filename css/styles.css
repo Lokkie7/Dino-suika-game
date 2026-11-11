@@ -129,7 +129,7 @@ section { /* Чтобы секции не схлопывались и имели
 
 .current-score,
 .best-score,
-.next-fruit {
+.next-dino {
     padding: 16px;
     border-radius: 16px;
     color: #455b3d;
@@ -143,9 +143,13 @@ section { /* Чтобы секции не схлопывались и имели
     background-color: var(--yellow);
 }
 
-.next-fruit {
-    background-color: orange;
-    border: 1px solid var(--light-green);
+.next-dino {
+  width: 300px;              /* нужная ширина */
+  height: 120px;             /* нужная высота */
+  box-sizing: border-box;    /* padding и border входят в 200×120 */
+  background-color: #f6a24f;
+  border: 1px solid var(--light-green);
+  overflow: hidden;          /* лишний текст не вылезает за рамки */
 }
 
 .text-wrapper-6 { /* SCORE */
@@ -173,11 +177,6 @@ section { /* Чтобы секции не схлопывались и имели
     font-weight: bold;
 }
 
-.text-wrapper-11 { /* Звездочка */
-    font-size: 14px;
-    opacity: 0.8;
-}
-
 .text-wrapper-12 { /* Следующий */
     font-size: 14px;
     opacity: 0.8;
@@ -193,7 +192,7 @@ section { /* Чтобы секции не схлопывались и имели
     opacity: 0.8;
 }
 
-.peach-preview {
+.dino-preview {
     height: 48px;
     aspect-ratio: 1 / 1;
     background-color: pink; /* Замените на реальный SVG или картинку */
