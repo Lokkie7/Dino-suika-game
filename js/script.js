@@ -110,7 +110,7 @@
   // ================= DOM =================
   const el = {
     area: document.querySelector('.game-canvas-area'),
-    limitImg: document.querySelector('.fruit-limit-dotted'),
+    limitImg: document.querySelector('.dino-limit-dotted'),
     curScore: document.querySelector('.text-wrapper-7'),
     bestScore: document.querySelector('.text-wrapper-10'),
     status: document.querySelector('.text-wrapper-8'),
