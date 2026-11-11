@@ -1,0 +1,321 @@
+/* styles.css */
+
+/* 1. Растягиваем корневые элементы */
+html, body {
+    height: 100%;
+    margin: 0; /* Обязательно убираем стандартные отступы */
+    padding: 0;
+}
+
+/* 2. Стили вашего игрового блока */
+.dino-game {
+    background-color: #f7f7e8;
+    min-height: 100%; /* Занимает минимум весь экран */
+    width: 100%;
+    position: relative;
+}
+
+/* Если у вас есть вложенный блок soft-sunshine, который тоже должен быть на весь экран */
+.dino-game .soft-sunshine {
+    position: absolute; /* Центрируем по горизонтали */ 
+    left: 50%;
+    transform: translateX(-50%); /* Позиционируем на треть экрана сверху */
+    top: 15vh; /* 33.3% от высоты экрана */ /* Размеры овала */
+    width: 480px;
+    height: 624px; 
+    background-color: #f3eac375; /* Форма овала */
+    border-radius: 50%; /* Добавляем тень */
+    box-shadow: 0 40px 100px rgba(0, 0, 0, 0.25);
+}
+
+.dino-game .header { 
+    position: absolute;
+    top: 40px;
+    left: 50%;
+    transform: translateX(-50%); /* Центрируем весь хедер относительно игры */
+    width: calc(100% - 128px); /* Ширина на всю игру минус боковые отступы (64*2) */
+    max-width: 1312px; /* Ограничение из вашего макета */
+    height: 92px; /* === ГЛАВНОЕ ИЗМЕНЕНИЕ === */
+    display: flex;
+    justify-content: space-between; /* Равномерно распределяет элементы по краям */
+    align-items: center; /* Выравнивает по вертикали */
+    background-color: transparent; /* Фон хедера лучше сделать прозрачным */
+    padding: 0 32px; /* Внутренние отступы вместо абсолютных координат */
+    box-sizing: border-box; }
+
+.dino-game .header-left { 
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; 
+}
+
+.dino-game .text-wrapper {
+    font-family: "Quicksand", Helvetica;
+    font-weight: 700;
+    color: #455b3d;
+    font-size: 44px;
+    letter-spacing: 0;
+    line-height: normal;
+}
+
+.dino-game .div {
+    font-family: "Nunito", Helvetica;
+    font-weight: 700;
+    color: #7c896d;
+    font-size: 11px;
+    letter-spacing: 2px;
+    line-height: normal;
+    margin: 4px 0 0 2px;
+}
+
+.dino-game .replay-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: #edbe8d;
+    border-radius: 26px;
+    padding: 0 24px;
+    height: 52px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.dino-game .replay-button:hover { 
+    background-color: #e0b07f; 
+}
+
+.dino-game .text-wrapper-3 {
+    font-family: "Nunito", Helvetica;
+    font-weight: 700;
+    color: #455b3d;
+    font-size: 24px;
+    line-height: normal;
+    margin: 0;
+}
+
+.dino-game .text-wrapper-4 {
+    font-family: "Nunito", Helvetica;
+    font-weight: 700;
+    color: #455b3d;
+    font-size: 17px;
+    line-height: normal;
+    margin: 0;
+}
+
+.game-main-content {
+    display: grid; grid-template-columns: 1fr 1fr 1fr; /* Три равные колонки (по 33.3%) */ 
+    grid-template-rows: 100vh; /* Занимает всю высоту экрана */ 
+    gap: 10px; /* Расстояние между секциями */ 
+    min-height: 100vh; /* Страховка на случай малого контента */ 
+    padding: 10px; /* Отступы от краев экрана */
+}
+
+section { /* Чтобы секции не схлопывались и имели фон, если он нужен */ 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    padding: 15px; 
+    border-radius: 8px; 
+    color: #fff; 
+    font-family: sans-serif; }
+
+.scoreboard {
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+    column-gap: 32px;
+    row-gap: 16px;
+    margin-bottom: 48px;
+}
+
+.current-score,
+.best-score,
+.next-fruit {
+    padding: 16px;
+    border-radius: 16px;
+    color: #455b3d;
+}
+
+.current-score {
+    background-color: var(--light-green);
+}
+
+.best-score {
+    background-color: var(--yellow);
+}
+
+.next-fruit {
+    background-color: orange;
+    border: 1px solid var(--light-green);
+}
+
+.text-wrapper-6 { /* SCORE */
+    font-size: 14px;
+    opacity: 0.8;
+}
+
+.text-wrapper-7 { /* Число очков */
+    font-size: 48px;
+    font-weight: bold;
+}
+
+.text-wrapper-8 { /* Продолжай! */
+    font-size: 14px;
+    opacity: 0.8;
+}
+
+.text-wrapper-9 { /* Лучший счёт */
+    font-size: 14px;
+    opacity: 0.8;
+}
+
+.text-wrapper-10 { /* Рекорд */
+    font-size: 48px;
+    font-weight: bold;
+}
+
+.text-wrapper-11 { /* Звездочка */
+    font-size: 14px;
+    opacity: 0.8;
+}
+
+.text-wrapper-12 { /* Следующий */
+    font-size: 14px;
+    opacity: 0.8;
+}
+
+.text-wrapper-13 { /* Диллофозавр */
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.text-wrapper-14 { /* Ночной кошмар */
+    font-size: 14px;
+    opacity: 0.8;
+}
+
+.peach-preview {
+    height: 48px;
+    aspect-ratio: 1 / 1;
+    background-color: pink; /* Замените на реальный SVG или картинку */
+    border-radius: 50%;
+}
+
+.p {
+    font-size: 14px;
+    opacity: 0.8;
+}
+
+
+/* 2. Основной контейнер стеклянной коробки */
+.glass-play-box {
+    position: relative;
+    top: 10vh;
+    bottom: 10vh;
+    width: 500px;
+    height: 700px;
+    border-radius: 20px;
+    overflow: hidden;
+    
+    /* ЭФФЕКТ СТЕКЛА */
+    background: rgba(255, 255, 255, 0.05); /* Очень слабый белый фон */
+    border: 1px solid rgba(255, 255, 255, 0.2); /* Светлая рамка */
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); /* Глубокая тень */
+    -webkit-backdrop-filter: blur(12px); /* Для Safari */
+}
+
+/* 3. Внутренняя зона игры (куда падает Canvas) */
+.game-canvas-area {
+    position: absolute;
+    bottom: 80px; /* Отступ снизу для надписи и черты */
+    left: 20px;
+    right: 20px;
+    top: 20px;
+    
+    /* Чтобы видеть границы при разработке */
+    background: rgba(0, 0, 0, 0.05); 
+    border-radius: 15px;
+    border: 1px dashed rgba(255, 255, 255, 0.1);
+}
+
+/* 4. Стеклянный ободок сверху (имитация толщины стекла) */
+.glass-rim {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 10px;
+    background: rgba(255, 255, 255, 0.2);
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+}
+
+/* 5. Левая и правая грани (для 3D-объема) */
+.left-glass, .right-glass {
+    position: absolute;
+    top: 10px; /* Ниже обода */
+    bottom: 80px;
+    width: 15px;
+    background: rgba(255, 255, 255, 0.1);
+}
+.left-glass { left: 0; border-top-left-radius: 15px; border-bottom-left-radius: 15px; }
+.right-glass { right: 0; border-top-right-radius: 15px; border-bottom-right-radius: 15px; }
+
+/* 6. Внутренняя фаска (блик внутри коробки) */
+.inner-glass-edge {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    right: 20px;
+    bottom: 90px;
+    pointer-events: none; /* Чтобы не мешал кликам по игре */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.1);
+}
+
+/* 7. Базовая тень (под коробкой) */
+.glass-base-shadow {
+    position: absolute;
+    bottom: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 95%;
+    height: 40px;
+    background: radial-gradient(circle, rgba(0,0,0,0.4) 0%, transparent 60%);
+    border-radius: 50%;
+    filter: blur(20px);
+    z-index: -1;
+}
+
+/* 8. Прозрачный слой (если нужен как отдельный декор) */
+.transparent-glass {
+    position: absolute;
+    inset: 0;
+    background: transparent;
+}
+
+/* 9. Ограничитель (dotted line) */
+.fruit-limit-dotted {
+    position: absolute;
+    top: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    height: 10px;
+    pointer-events: none;
+}
+
+/* 10. Текст предупреждения */
+.text-wrapper-16 {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 14px;
+    font-family: sans-serif;
+    text-align: center;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+}
+
+.game-canvas-area { border: 2px solid red !important; }

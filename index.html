@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dino game</title>
     <meta name="description" content="Dino suika game">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
     <div class="dino-game" >
@@ -21,46 +21,41 @@
         <!-- Правая часть -->
         <div class="replay-button" >
             <div class="text-wrapper-3" >↻</div>
-            <div class="text-wrapper-4" >Replay</div>
+            <div class="text-wrapper-4" >Рестарт</div>
     </div>
     </header>
-
     <!-- ОСНОВНАЯ ЧАСТЬ СТРАНИЦЫ -->
 <main class="game-main-content">
-
     <!-- 1. ДОСКА РЕЗУЛЬТАТОВ И СЧЕТА -->
     <section class="scoreboard">
-        <div class="text-wrapper-5">YOUR LITTLE HARVEST</div>
 
         <div class="scores-grid">
             <!-- Левая колонка: Текущий счет -->
             <div class="current-score">
-                <div class="text-wrapper-6">SCORE</div>
+                <div class="text-wrapper-6">Текущий счёт</div>
                 <div class="text-wrapper-7">1,280</div>
-                <div class="text-wrapper-8">Keep growing!</div>
+                <div class="text-wrapper-8">Продолжай!</div>
             </div>
 
             <!-- Центральная колонка: Личный рекорд -->
             <div class="best-score">
-                <div class="text-wrapper-9">PERSONAL BEST</div>
+                <div class="text-wrapper-9">Лучший счёт</div>
                 <div class="text-wrapper-10">2,460</div>
                 <div class="text-wrapper-11">*</div>
             </div>
 
             <!-- Правая колонка: Следующий фрукт -->
             <div class="next-fruit">
-                <div class="text-wrapper-12">UP NEXT</div>
-                <div class="text-wrapper-13">Peach</div>
-                <div class="text-wrapper-14">A sweet little start.</div>
+                <div class="text-wrapper-12">Следующий</div>
+                <div class="text-wrapper-13">Диллофозавр</div>
+                <div class="text-wrapper-14">Ночной кошмар.</div>
                 <div class="peach-preview"></div>
                 <div class="text-wrapper-15">&gt;…</div>
             </div>
-        </div>
 
-        <p class="p">No rush. Just one more fruit.</p>
+    </div>
     </section>
 
-    <!-- 2. ИГРОВАЯ ЗОНА (КОНТЕЙНЕР ДЛЯ PHYSICS JS) -->
     <section class="glass-play-box">
         <!-- Тени и стеклянные элементы декора -->
         <div class="glass-base-shadow"></div>
@@ -71,63 +66,20 @@
         <div class="glass-rim"></div>
 
         <!-- Ограничитель (dotted line) -->
-        <img class="fruit-limit-dotted" src="https://c.animaapp.com/iRdb4EGuUIqRKCxWRdShig/img/fruit-limit-dotted-line.svg" alt="Fruit limit line">
-        <div class="text-wrapper-16">keep it below here</div>
+        <img class="fruit-limit-dotted" src="https://c.animaapp.com/iRdb4EGuUIqRKCxWRdShig/img/fruit-limit-dotted-line.svg" alt="limit line">
+        <div class="text-wrapper-16">не заходи за черту</div>
 
-        <!-- Зона, куда падают фрукты (сюда будет смотреть Engine/Render из Matter.js) -->
+        <!-- Зона, куда падают динозавры (сюда будет смотреть Engine/Render из Matter.js) -->
         <div class="game-canvas-area"></div>
-
-        <!-- Подсказка для игрока -->
-        <img class="drop-guide" src="https://c.animaapp.com/iRdb4EGuUIqRKCxWRdShig/img/drop-guide.svg" alt="Drop guide">
-        <p class="text-wrapper-17">MOVE TO AIM - CLICK TO DROP</p>
     </section>
 
-    <!-- 3. ИНСТРУКЦИИ И ПОДСКАЗКИ -->
     <section class="game-clues">
-        <div class="text-wrapper-18">A LITTLE HELP</div>
-
-        <div class="how-to-play">
-            <div class="step">
-                <div class="text-wrapper-20">01</div>
-                <div class="text-wrapper-21">Aim your fruit</div>
-                <p class="move-left-or-right">Move left or right to<br>find the perfect spot.</p>
-            </div>
-
-            <div class="step">
-                <div class="text-wrapper-20">02</div>
-                <div class="text-wrapper-22">Drop it in</div>
-                <p class="click-or-tap-to-let">Click or tap to let<br>your fruit fall.</p>
-            </div>
-
-            <div class="step">
-                <div class="text-wrapper-20">03</div>
-                <div class="match-grow">Match & grow</div>
-                <p class="two-of-a-kind-merge">Two of a kind merge<br>into a bigger fruit.</p>
-            </div>
-        </div>
-
-        <div class="gentle-reminder">
-            <div class="text-wrapper-23">Room to grow</div>
-            <p class="keep-your-fruit">Keep your fruit below the<br>dotted line. A little space<br>goes a long way.</p>
-        </div>
+        <img src="images/clue.png" alt="Подсказка">
     </section>
 </main>
 
-<!-- ФУТЕР -->
-<footer class="game-footer">
-    <div class="credits">
-        <div class="footer-divider"></div>
-        <p class="text-wrapper-24">A little pause. A little play.</p>
-        <p class="made-with-love-a">Made with love & a splash of sunshine</p>
-        <div class="text-wrapper-25">Credits</div>
-    </div>
-    
-    <div class="merge-encouragement">
-        <p class="text-wrapper-26">A little bigger. A little happier.</p>
-    </div>
-</footer>
-
-    <!-- Подключение JavaScript -->
+<footer class="game-footer"></footer>
+<!-- Подключение JavaScript -->
     <script src="js/matter.min.js"></script>
     <script src="js/script.js"></script>
 </body>
