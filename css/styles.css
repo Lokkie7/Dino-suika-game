@@ -21,20 +21,17 @@ html, body {
 
 /* Если у вас есть вложенный блок soft-sunshine, который тоже должен быть на весь экран */
 
-.dino-game .header { 
-    position: absolute;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%); /* Центрируем весь хедер относительно игры */
-    width: calc(100% - 128px); /* Ширина на всю игру минус боковые отступы (64*2) */
-    max-width: 1312px; /* Ограничение из вашего макета */
-    height: 92px; /* === ГЛАВНОЕ ИЗМЕНЕНИЕ === */
-    display: flex;
-    justify-content: space-between; /* Равномерно распределяет элементы по краям */
-    align-items: center; /* Выравнивает по вертикали */
-    background-color: transparent; /* Фон хедера лучше сделать прозрачным */
-    padding: 0 32px; /* Внутренние отступы вместо абсолютных координат */
-    box-sizing: border-box; }
+.dino-game .header {
+  position: relative;        /* было absolute */
+  width: min(1312px, calc(100% - 64px));
+  margin: 20px auto 0;
+  height: 92px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 32px;
+  box-sizing: border-box;
+}
 
 .dino-game .header-left { 
     display: flex;
