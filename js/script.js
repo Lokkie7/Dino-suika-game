@@ -108,7 +108,7 @@
   const BEST_KEY = 'dinoSuikaBest';
 
   const mergeSound = new Audio('sounds/melon.mp3');mergeSound.volume = 0.5; // Громкость от 0 до 1
-
+  const bigMergeSound = new Audio('sounds/troodon.mp3');bigMergeSound.volume = 0.7;
   // ================= DOM =================
   const el = {
     area: document.querySelector('.game-canvas-area'),
@@ -282,8 +282,6 @@
       const { a, b } = mergeQueue.shift();
       const level = a.dinoLevel;
 
-      playMergeSound();
-
       Composite.remove(engine.world, a);
       Composite.remove(engine.world, b);
 
@@ -291,11 +289,21 @@
       const y = (a.position.y + b.position.y) / 2;
 
       if (level === MAX_LEVEL) {
-        addScore(DINOS[level].points * 2);
-      } else {
-        createDino(level + 1, x, y);
-        addScore(DINOS[level + 1].points);
-      }
+  bigMergeSound.currentTime = 0;
+  bigMergeSound.play().catch((error) => {
+    console.warn('Не удалось проиграть особый звук:', error);
+  });
+
+  addScore(DINOS[level].points * 2);
+} else {
+  mergeSound.currentTime = 0;
+  mergeSound.play().catch((error) => {
+    console.warn('Не удалось проиграть звук слияния:', error);
+  });
+
+  createDino(level + 1, x, y);
+  addScore(DINOS[level + 1].points);
+}
     }
   }
 
