@@ -9,7 +9,7 @@ html, body {
 
 /* 2. Стили вашего игрового блока */
 .dino-game {
-    background-color: #f7f7e8;
+    background-color: #E0C37F;
     min-height: 100%; /* Занимает минимум весь экран */
     width: 100%;
     position: relative;
@@ -30,7 +30,7 @@ html, body {
 
 .dino-game .header { 
     position: absolute;
-    top: 40px;
+    top: 20px;
     left: 50%;
     transform: translateX(-50%); /* Центрируем весь хедер относительно игры */
     width: calc(100% - 128px); /* Ширина на всю игру минус боковые отступы (64*2) */
@@ -145,9 +145,9 @@ section { /* Чтобы секции не схлопывались и имели
 
 .next-dino {
   width: 300px;              /* нужная ширина */
-  height: 120px;             /* нужная высота */
+  height: 130px;             /* нужная высота */
   box-sizing: border-box;    /* padding и border входят в 200×120 */
-  background-color: #f6a24f;
+  background-color: #e0b07f;
   border: 1px solid var(--light-green);
   overflow: hidden;          /* лишний текст не вылезает за рамки */
 }
@@ -211,7 +211,7 @@ section { /* Чтобы секции не схлопывались и имели
     top: 10vh;
     bottom: 10vh;
     width: 500px;
-    height: 700px;
+    height: 640px;
     border-radius: 20px;
     overflow: hidden;
     
@@ -265,7 +265,7 @@ section { /* Чтобы секции не схлопывались и имели
     top: 20px;
     left: 20px;
     right: 20px;
-    bottom: 90px;
+    bottom: 70px;
     pointer-events: none; /* Чтобы не мешал кликам по игре */
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 15px;
@@ -317,4 +317,39 @@ section { /* Чтобы секции не схлопывались и имели
     text-shadow: 0 1px 2px rgba(0,0,0,0.3);
 }
 
-.game-canvas-area { border: 2px solid red !important; }
+.game-clues {
+  width: 400px;
+  height: 400px;
+  margin-top: 25vh;
+  margin-bottom: 48px;
+  overflow: hidden;
+}
+
+.game-clues img {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.game-footer {
+  position: absolute;
+  right: 32px;
+  bottom: 30px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #7c896d;
+  font-family: "Nunito", sans-serif;
+  font-size: 14px;
+}
+
+.game-footer__name {
+  color: #455b3d;
+  font-weight: 700;
+}
+
+.game-footer__year {
+  margin-left: 4px;
+  opacity: 0.7;
+}
