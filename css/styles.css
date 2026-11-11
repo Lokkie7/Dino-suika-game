@@ -9,10 +9,13 @@ html, body {
 
 /* 2. Стили вашего игрового блока */
 .dino-game {
-    background-color: #E0C37F;
-    min-height: 100%; /* Занимает минимум весь экран */
-    width: 100%;
-    position: relative;
+  background-color: #E0C37F;
+  height: 100vh;
+  min-height: 0;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 /* Если у вас есть вложенный блок soft-sunshine, который тоже должен быть на весь экран */
