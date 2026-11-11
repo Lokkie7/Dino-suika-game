@@ -107,6 +107,8 @@
   const WALL = 60;
   const BEST_KEY = 'dinoSuikaBest';
 
+  const mergeSound = new Audio('sounds/melon.mp3');mergeSound.volume = 0.5; // Громкость от 0 до 1
+
   // ================= DOM =================
   const el = {
     area: document.querySelector('.game-canvas-area'),
@@ -166,6 +168,13 @@
   const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
   const randomSpawnLevel = () => Math.floor(Math.random() * SPAWN_LEVELS);
   const fmt = (number) => number.toLocaleString('ru-RU');
+
+  function playMergeSound() {
+  mergeSound.currentTime = 0; // Начать звук сначала
+  mergeSound.play().catch((error) => {
+    console.warn('Не удалось проиграть звук слияния:', error);
+  });
+}
 
   function measure() {
     W = el.area.clientWidth;
@@ -272,6 +281,8 @@
     while (mergeQueue.length) {
       const { a, b } = mergeQueue.shift();
       const level = a.dinoLevel;
+
+      playMergeSound();
 
       Composite.remove(engine.world, a);
       Composite.remove(engine.world, b);
