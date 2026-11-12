@@ -427,3 +427,20 @@ section { /* Чтобы секции не схлопывались и имели
     gap: 16px;             /* зазор между блоками */
   }
 }
+
+.game-canvas-area,
+.game-canvas-area canvas {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.glass-play-box,
+.glass-play-box img,
+.glass-play-box .text-wrapper-16 {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
