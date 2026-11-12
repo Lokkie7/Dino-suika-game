@@ -7,7 +7,7 @@
       name: 'Компсогнат',
       desc: 'Самый маленький.',
       r: 18,
-      color: '#b5d99c',
+      color: '#e6de94',
       points: 1,
       sprite: 'images/dino1.png'
     },
@@ -15,7 +15,7 @@
       name: 'Птеранодон',
       desc: 'Парит в небе.',
       r: 25,
-      color: '#8ec5e8',
+      color: '#cbd4c7',
       points: 3,
       sprite: 'images/dino2.png'
     },
@@ -23,7 +23,7 @@
       name: 'Велоцираптор',
       desc: 'Быстрый охотник.',
       r: 32,
-      color: '#f5c96b',
+      color: '#9db4f7',
       points: 6,
       sprite: 'images/dino3.png'
     },
@@ -31,7 +31,7 @@
       name: 'Пахицефалозавр',
       desc: 'Боньк.',
       r: 40,
-      color: '#9fd3a8',
+      color: '#f2b29e',
       points: 10,
       sprite: 'images/dino4.png'
     },
@@ -39,7 +39,7 @@
       name: 'Диллофозавр',
       desc: 'Ночной кошмар.',
       r: 48,
-      color: '#c9a7e0',
+      color: '#f4d1e8',
       points: 15,
       sprite: 'images/dino5.png'
     },
@@ -47,7 +47,7 @@
       name: 'Тенонтозавр',
       desc: 'Лошадка.',
       r: 56,
-      color: '#d9a27a',
+      color: '#ecd3ad',
       points: 21,
       sprite: 'images/dino6.png'
     },
@@ -55,7 +55,7 @@
       name: 'Карнотавр',
       desc: 'Динозавр бык.',
       r: 64,
-      color: '#7fb3a6',
+      color: '#edb1ad',
       points: 28,
       sprite: 'images/dino7.png'
     },
@@ -63,7 +63,7 @@
       name: 'Кентрозавр',
       desc: 'С костяными пластинами.',
       r: 72,
-      color: '#e88a7a',
+      color: '#ede1b7',
       points: 36,
       sprite: 'images/dino8.png'
     },
@@ -71,7 +71,7 @@
       name: 'Тираннозавр',
       desc: 'Король ящеров.',
       r: 82,
-      color: '#6fa3d6',
+      color: '#edc2af',
       points: 45,
       sprite: 'images/dino9.png'
     },
@@ -79,7 +79,7 @@
       name: 'Трицератопс',
       desc: 'Король мёртв, да здравствует король',
       r: 92,
-      color: '#e6c94f',
+      color: '#ecdbbb',
       points: 55,
       sprite: 'images/dino10.png'
     },
@@ -87,7 +87,7 @@
       name: 'Брахиозавр',
       desc: 'Гигант.',
       r: 104,
-      color: '#7bb662',
+      color: '#eab7a1',
       points: 66,
       sprite: 'images/dino11.png'
     }
