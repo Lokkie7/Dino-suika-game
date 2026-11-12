@@ -192,10 +192,14 @@
   }
 
   // ================= СТЕНЫ =================
+
+//физика коробки
+
   function addWalls() {
     const options = {
       isStatic: true,
-      friction: 0.8,
+      friction: 0.1, //0.8
+      restitution: 12,
       label: 'wall'
     };
 
@@ -228,12 +232,15 @@
   function createDino(level, x, y) {
     const dino = DINOS[level];
 
-    const body = Bodies.circle(x, y, dino.r, {
-      label: 'dino',
-      restitution: 0.1,
-      friction: 0.4,
-      frictionStatic: 0.6
-    });
+//параметры физики
+
+  const body = Bodies.circle(x, y, dino.r, {
+  label: 'dino',
+  restitution: 0.25, //0.1
+  friction: 0.8, // 0.4
+  frictionStatic: 0.12, // 0.6
+  frictionAir: 0.015
+});
 
     body.dinoLevel = level;
     body.dropTime = performance.now();
