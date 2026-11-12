@@ -21,20 +21,17 @@ html, body {
 
 /* Если у вас есть вложенный блок soft-sunshine, который тоже должен быть на весь экран */
 
-.dino-game .header { 
-    position: absolute;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%); /* Центрируем весь хедер относительно игры */
-    width: calc(100% - 128px); /* Ширина на всю игру минус боковые отступы (64*2) */
-    max-width: 1312px; /* Ограничение из вашего макета */
-    height: 92px; /* === ГЛАВНОЕ ИЗМЕНЕНИЕ === */
-    display: flex;
-    justify-content: space-between; /* Равномерно распределяет элементы по краям */
-    align-items: center; /* Выравнивает по вертикали */
-    background-color: transparent; /* Фон хедера лучше сделать прозрачным */
-    padding: 0 32px; /* Внутренние отступы вместо абсолютных координат */
-    box-sizing: border-box; }
+.dino-game .header {
+  position: relative;        /* было absolute */
+  width: min(1312px, calc(100% - 64px));
+  margin: 20px auto 0;
+  height: 92px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 32px;
+  box-sizing: border-box;
+}
 
 .dino-game .header-left { 
     display: flex;
@@ -377,5 +374,39 @@ section { /* Чтобы секции не схлопывались и имели
   }
   .glass-play-box {
     height: 560px;
+  }
+}
+
+.dino-game .header {
+  flex-shrink: 0;
+}
+
+/* Отделяем шапку от тела визуально */
+.dino-game .header {
+  border-bottom: 1px solid rgba(69, 91, 61, 0.15);
+}
+
+/* Отступ сверху у основного контента */
+.game-main-content {
+  padding-top: 24px;
+}
+
+@media (max-width: 600px) {
+  .dino-game .header {
+    height: auto;          /* уже было, оставляем */
+    min-height: 92px;      /* не ниже базовой высоты */
+    margin: 12px 16px 0;   /* отступ от краёв экрана */
+    flex-shrink: 0;
+    align-items: flex-start;
+    row-gap: 12px;
+  }
+
+  .dino-game .replay-button {
+    align-self: flex-end;  /* кнопка справа под заголовком */
+  }
+
+  .game-main-content {
+    padding: 24px 16px 16px;
+    gap: 16px;             /* зазор между блоками */
   }
 }
