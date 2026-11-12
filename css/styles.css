@@ -324,6 +324,10 @@ section { /* Чтобы секции не схлопывались и имели
   aspect-ratio: 1 / 1;       /* вместо height: 400px */
   margin: 0;                 /* убраны margin-top: 25vh */
   justify-self: start;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+  -webkit-user-select: none;
 }
 
 .game-clues img {
