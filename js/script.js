@@ -1,6 +1,14 @@
 (() => {
   const { Engine, Runner, Bodies, Composite, Events } = Matter;
 
+const SUPABASE_URL = 'https://xguggrjrlfztcyebdmrw.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_N6CPgWedpnQWcba2h_w9Cg_vdGj4pU3';
+
+const supabaseClient = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_ANON_KEY
+);
+
   // ================= НАСТРОЙКИ =================
   const DINOS = [
     {
@@ -174,6 +182,66 @@
 
   const mergeQueue = [];
 
+  const leaderboard = {
+  form: document.querySelector('#score-form'),
+  name: document.querySelector('#player-name'),
+  list: document.querySelector('#leaderboard-list'),
+  message: document.querySelector('#leaderboard-message')
+};
+
+async function loadLeaderboard() {
+  const { data, error } = await supabaseClient
+    .from('scores')
+    .select('player_name, score')
+    .order('score', { ascending: false })
+    .limit(10);
+
+  if (error) {
+    console.error('Не удалось загрузить таблицу:', error);
+    leaderboard.message.textContent = 'Не удалось загрузить таблицу лидеров.';
+    return;
+  }
+
+  leaderboard.list.replaceChildren();
+
+  for (const entry of data) {
+    const item = document.createElement('li');
+    item.textContent = `${entry.player_name} — ${entry.score}`;
+    leaderboard.list.appendChild(item);
+  }
+}
+
+leaderboard.form.addEventListener('submit', async (event) => {
+  event.preventDefault();
+
+  const playerName = leaderboard.name.value.trim().slice(0, 20);
+
+  if (!playerName) {
+    leaderboard.message.textContent = 'Введите имя.';
+    return;
+  }
+
+  const { error } = await supabaseClient
+    .from('scores')
+    .insert({
+      player_name: playerName,
+      score
+    });
+
+  if (error) {
+    console.error('Не удалось сохранить результат:', error);
+    leaderboard.message.textContent = 'Не получилось сохранить результат.';
+    return;
+  }
+
+  leaderboard.message.textContent = 'Результат сохранён!';
+  await loadLeaderboard();
+});
+
+loadLeaderboard();
+
+
+
   // ================= УТИЛИТЫ =================
   const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
   const randomSpawnLevel = () => Math.floor(Math.random() * SPAWN_LEVELS);
@@ -209,7 +277,7 @@
     const options = {
       isStatic: true,
       friction: 0.1, //0.8
-      restitution: 12,
+      restitution: 0.8,
       label: 'wall'
     };
 

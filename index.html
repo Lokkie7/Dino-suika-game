@@ -28,31 +28,48 @@
 <main class="game-main-content">
     <!-- 1. ДОСКА РЕЗУЛЬТАТОВ И СЧЕТА -->
     <section class="scoreboard">
+  <div class="scores-grid">
+    <div class="score-pair">
+      <div class="current-score">
+        <div class="text-wrapper-6">Текущий счёт</div>
+        <div class="text-wrapper-7">1,280</div>
+        <div class="text-wrapper-8">Продолжай!</div>
+      </div>
 
-        <div class="scores-grid">
-            <!-- Левая колонка: Текущий счет -->
-            <div class="current-score">
-                <div class="text-wrapper-6">Текущий счёт</div>
-                <div class="text-wrapper-7">1,280</div>
-                <div class="text-wrapper-8">Продолжай!</div>
-            </div>
-
-            <!-- Центральная колонка: Личный рекорд -->
-            <div class="best-score">
-                <div class="text-wrapper-9">Лучший счёт</div>
-                <div class="text-wrapper-10">2,460</div>
-            </div>
-
-            <!-- Правая колонка: Следующий фрукт -->
-            <div class="next-dino">
-                <div class="text-wrapper-12">Следующий</div>
-                <div class="text-wrapper-13">Диллофозавр</div>
-                <div class="text-wrapper-14">Ночной кошмар.</div>
-                <div class="dino-preview"></div>
-            </div>
-
+      <div class="best-score">
+        <div class="text-wrapper-9">Лучший счёт</div>
+        <div class="text-wrapper-10">2,460</div>
+      </div>
     </div>
-    </section>
+
+    <div class="next-dino">
+      <div class="text-wrapper-12">Следующий</div>
+      <div class="text-wrapper-13">Диллофозавр</div>
+      <div class="text-wrapper-14">Ночной кошмар.</div>
+      <div class="dino-preview"></div>
+    </div>
+  </div>
+
+  <div class="leaderboard">
+    <div class="leaderboard__content">
+      <h2>Таблица лидеров</h2>
+
+      <form id="score-form">
+        <input
+          id="player-name"
+          type="text"
+          maxlength="20"
+          placeholder="Ваше имя"
+          required
+        >
+        <button type="submit">Сохранить счёт</button>
+      </form>
+
+      <p id="leaderboard-message" aria-live="polite"></p>
+      <ol id="leaderboard-list"></ol>
+    </div>
+  </div>
+</section>
 
     <section class="glass-play-box">
         <!-- Тени и стеклянные элементы декора -->
@@ -83,6 +100,7 @@
 
 </footer>
 <!-- Подключение JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="js/matter.min.js"></script>
     <script src="js/script.js"></script>
 </body>
