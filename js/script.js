@@ -174,8 +174,12 @@ const supabaseClient = window.supabase.createClient(
   engine.velocityIterations = 8;
 
   let score = 0;
-  let best = Number(localStorage.getItem(BEST_KEY)) || 0;
-  let gameOver = false;
+let best = Number(localStorage.getItem(BEST_KEY)) || 0;
+let gameOver = false;
+
+const MAX_SUBMIT_SCORE = 10000;
+let gameStartedAt = Date.now();
+let scoreSubmitted = false;
   let canDrop = true;
   let aimX = 0;
   let nextLevel = 0;
@@ -192,7 +196,7 @@ const supabaseClient = window.supabase.createClient(
 async function loadLeaderboard() {
   const { data, error } = await supabaseClient
     .from('scores')
-    .select('player_name, score')
+    .select('player_name, score, duration_seconds, created_at')
     .order('score', { ascending: false })
     .limit(10);
 
@@ -214,6 +218,16 @@ async function loadLeaderboard() {
 leaderboard.form.addEventListener('submit', async (event) => {
   event.preventDefault();
 
+  if (!gameOver) {
+    leaderboard.message.textContent = 'Сначала закончи игру.';
+    return;
+  }
+
+  if (scoreSubmitted) {
+    leaderboard.message.textContent = 'Результат этой игры уже отправлен.';
+    return;
+  }
+
   const playerName = leaderboard.name.value.trim().slice(0, 20);
 
   if (!playerName) {
@@ -221,19 +235,41 @@ leaderboard.form.addEventListener('submit', async (event) => {
     return;
   }
 
+  if (
+    !Number.isSafeInteger(score) ||
+    score < 0 ||
+    score > MAX_SUBMIT_SCORE
+  ) {
+    leaderboard.message.textContent = 'Этот результат не принимается. читер.';
+    return;
+  }
+
+  const durationSeconds = Math.floor(
+    (Date.now() - gameStartedAt) / 1000
+  );
+
+  if (durationSeconds < 10) {
+    leaderboard.message.textContent =
+      'Ах ты грёбаный читер.';
+    return;
+  }
+
   const { error } = await supabaseClient
     .from('scores')
     .insert({
       player_name: playerName,
-      score
+      score,
+      duration_seconds: durationSeconds
     });
 
   if (error) {
     console.error('Не удалось сохранить результат:', error);
-    leaderboard.message.textContent = 'Не получилось сохранить результат.';
+    leaderboard.message.textContent =
+      'Не получилось сохранить результат.';
     return;
   }
 
+  scoreSubmitted = true;
   leaderboard.message.textContent = 'Результат сохранён!';
   await loadLeaderboard();
 });
@@ -410,9 +446,12 @@ loadLeaderboard();
   }
 
   function endGame() {
-    gameOver = true;
-    el.status.textContent = 'Игра окончена';
-  }
+  if (gameOver) return;
+
+  gameOver = true;
+  el.status.textContent = 'Игра окончена';
+  leaderboard.message.textContent = 'Введите имя и отправьте результат.';
+}
 
   // ================= СЧЁТ И UI =================
   function addScore(points) {
@@ -554,19 +593,23 @@ loadLeaderboard();
 
   el.restart.addEventListener('click', restart);
 
-  function restart() {
-    Composite.clear(engine.world, true);
-    mergeQueue.length = 0;
+ function restart() {
+  Composite.clear(engine.world, true);
+  mergeQueue.length = 0;
 
-    score = 0;
-    gameOver = false;
-    canDrop = true;
-    el.status.textContent = 'Продолжай!';
+  score = 0;
+  gameOver = false;
+  canDrop = true;
+  scoreSubmitted = false;
+  gameStartedAt = Date.now();
 
-    nextLevel = randomSpawnLevel();
-    updateScoreUI();
-    updatePreview();
-  }
+  leaderboard.message.textContent = '';
+  el.status.textContent = 'Продолжай!';
+
+  nextLevel = randomSpawnLevel();
+  updateScoreUI();
+  updatePreview();
+}
 
   // ================= СТАРТ =================
   function init() {
