@@ -128,8 +128,8 @@ const SOUND_FILES = {
 };
 
 const SOUND_VOLUME = {
-  drop: 0.1,
-  land: 0.2,
+  drop: 0.15,
+  land: 0.25,
   merge: 0.35,
   bigMerge: 0.65,
   countdown: 0.3,
