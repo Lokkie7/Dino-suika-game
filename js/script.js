@@ -17,7 +17,7 @@ const supabaseClient = window.supabase.createClient(
       r: 17,
       color: '#e6de94',
       points: 1,
-      sprite: 'images/dino1.png'
+      sprite: 'images/dino1.webp'
     },
     {
       name: 'Птеранодон',
@@ -25,7 +25,7 @@ const supabaseClient = window.supabase.createClient(
       r: 23,
       color: '#cbd4c7',
       points: 3,
-      sprite: 'images/dino2.png'
+      sprite: 'images/dino2.webp'
     },
     {
       name: 'Велоцираптор',
@@ -33,7 +33,7 @@ const supabaseClient = window.supabase.createClient(
       r: 29,
       color: '#9db4f7',
       points: 6,
-      sprite: 'images/dino3.png'
+      sprite: 'images/dino3.webp'
     },
     {
       name: 'Пахицефалозавр',
@@ -41,7 +41,7 @@ const supabaseClient = window.supabase.createClient(
       r: 35,
       color: '#f2b29e',
       points: 10,
-      sprite: 'images/dino4.png'
+      sprite: 'images/dino4.webp'
     },
     {
       name: 'Диллофозавр',
@@ -49,7 +49,7 @@ const supabaseClient = window.supabase.createClient(
       r: 42,
       color: '#f4d1e8',
       points: 15,
-      sprite: 'images/dino5.png'
+      sprite: 'images/dino5.webp'
     },
     {
       name: 'Тенонтозавр',
@@ -57,7 +57,7 @@ const supabaseClient = window.supabase.createClient(
       r: 48,
       color: '#ecd3ad',
       points: 21,
-      sprite: 'images/dino6.png'
+      sprite: 'images/dino6.webp'
     },
     {
       name: 'Карнотавр',
@@ -65,7 +65,7 @@ const supabaseClient = window.supabase.createClient(
       r: 56,
       color: '#edb1ad',
       points: 28,
-      sprite: 'images/dino7.png'
+      sprite: 'images/dino7.webp'
     },
     {
       name: 'Кентрозавр',
@@ -73,7 +73,7 @@ const supabaseClient = window.supabase.createClient(
       r: 64,
       color: '#ede1b7',
       points: 36,
-      sprite: 'images/dino8.png'
+      sprite: 'images/dino8.webp'
     },
     {
       name: 'Тираннозавр',
@@ -81,7 +81,7 @@ const supabaseClient = window.supabase.createClient(
       r: 72,
       color: '#edc2af',
       points: 45,
-      sprite: 'images/dino9.png'
+      sprite: 'images/dino9.webp'
     },
     {
       name: 'Трицератопс',
@@ -89,7 +89,7 @@ const supabaseClient = window.supabase.createClient(
       r: 80,
       color: '#ecdbbb',
       points: 55,
-      sprite: 'images/dino10.png'
+      sprite: 'images/dino10.webp'
     },
     {
       name: 'Брахиозавр',
@@ -97,7 +97,7 @@ const supabaseClient = window.supabase.createClient(
       r: 88,
       color: '#eab7a1',
       points: 66,
-      sprite: 'images/dino11.png'
+      sprite: 'images/dino11.webp'
     }
   ];
 
