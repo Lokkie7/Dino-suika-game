@@ -14,7 +14,7 @@ const supabaseClient = window.supabase.createClient(
     {
       name: 'Компсогнат',
       desc: 'Самый маленький.',
-      r: 15,
+      r: 17,
       color: '#e6de94',
       points: 1,
       sprite: 'images/dino1.png'
@@ -22,7 +22,7 @@ const supabaseClient = window.supabase.createClient(
     {
       name: 'Птеранодон',
       desc: 'Парит в небе.',
-      r: 21,
+      r: 23,
       color: '#cbd4c7',
       points: 3,
       sprite: 'images/dino2.png'
@@ -30,7 +30,7 @@ const supabaseClient = window.supabase.createClient(
     {
       name: 'Велоцираптор',
       desc: 'Быстрый охотник.',
-      r: 27,
+      r: 29,
       color: '#9db4f7',
       points: 6,
       sprite: 'images/dino3.png'
@@ -38,7 +38,7 @@ const supabaseClient = window.supabase.createClient(
     {
       name: 'Пахицефалозавр',
       desc: 'Боньк.',
-      r: 33,
+      r: 35,
       color: '#f2b29e',
       points: 10,
       sprite: 'images/dino4.png'
@@ -46,7 +46,7 @@ const supabaseClient = window.supabase.createClient(
     {
       name: 'Диллофозавр',
       desc: 'Ночной кошмар.',
-      r: 40,
+      r: 42,
       color: '#f4d1e8',
       points: 15,
       sprite: 'images/dino5.png'
@@ -54,7 +54,7 @@ const supabaseClient = window.supabase.createClient(
     {
       name: 'Тенонтозавр',
       desc: 'Лошадка.',
-      r: 46,
+      r: 48,
       color: '#ecd3ad',
       points: 21,
       sprite: 'images/dino6.png'
@@ -70,7 +70,7 @@ const supabaseClient = window.supabase.createClient(
     {
       name: 'Кентрозавр',
       desc: 'С костяными пластинами.',
-      r: 62,
+      r: 64,
       color: '#ede1b7',
       points: 36,
       sprite: 'images/dino8.png'
@@ -78,7 +78,7 @@ const supabaseClient = window.supabase.createClient(
     {
       name: 'Тираннозавр',
       desc: 'Король ящеров.',
-      r: 70,
+      r: 72,
       color: '#edc2af',
       points: 45,
       sprite: 'images/dino9.png'
@@ -86,7 +86,7 @@ const supabaseClient = window.supabase.createClient(
     {
       name: 'Трицератопс',
       desc: 'Король мёртв, да здравствует король',
-      r: 78,
+      r: 80,
       color: '#ecdbbb',
       points: 55,
       sprite: 'images/dino10.png'
@@ -94,7 +94,7 @@ const supabaseClient = window.supabase.createClient(
     {
       name: 'Брахиозавр',
       desc: 'Гигант.',
-      r: 86,
+      r: 88,
       color: '#eab7a1',
       points: 66,
       sprite: 'images/dino11.png'
