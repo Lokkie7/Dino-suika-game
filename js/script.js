@@ -127,8 +127,12 @@ const supabaseClient = window.supabase.createClient(
     nextName: document.querySelector('.text-wrapper-13'),
     nextDesc: document.querySelector('.text-wrapper-14'),
     preview: document.querySelector('.dino-preview'),
-    restart: document.querySelector('.replay-button')
+    restart: document.querySelector('.replay-button'),
+    countdown: document.querySelector('.danger-countdown')
   };
+
+  const GAME_OVER_DELAY_MS = 3000;
+  let dangerStartedAt = null;
 
   if (
     !el.area ||
@@ -139,7 +143,8 @@ const supabaseClient = window.supabase.createClient(
     !el.nextName ||
     !el.nextDesc ||
     !el.preview ||
-    !el.restart
+    !el.restart ||
+    !el.countdown
   ) {
     console.error('Не найдены необходимые элементы игры в HTML.');
     return;
@@ -429,26 +434,55 @@ loadLeaderboard();
   }
 
   // ================= ПРОВЕРКА ПРОИГРЫША =================
-  function checkGameOver(now) {
-    for (const body of Composite.allBodies(engine.world)) {
-      if (body.label !== 'dino' || body.removed) continue;
+function checkGameOver(now) {
+  const bodies = Composite.allBodies(engine.world);
 
-      const radius = DINOS[body.dinoLevel].r;
-      const settled = Math.hypot(body.velocity.x, body.velocity.y) < 0.5;
-      const aboveLine = body.position.y - radius < limitY;
-      const graceOver = now - body.dropTime > GRACE_MS;
+  const dinoAboveLine = bodies.some((body) => {
+    if (body.label !== 'dino' || body.removed) return false;
 
-      if (aboveLine && settled && graceOver) {
-        endGame();
-        return;
-      }
-    }
+    const graceOver = now - body.dropTime > GRACE_MS;
+    if (!graceOver) return false;
+
+    const radius = DINOS[body.dinoLevel].r;
+    return body.position.y - radius < limitY;
+  });
+
+  if (!dinoAboveLine) {
+    dangerStartedAt = null;
+    el.status.textContent = 'Продолжай!';
+    el.countdown.textContent = '';
+    el.countdown.classList.remove('is-active', 'is-urgent');
+    return;
   }
 
-  function endGame() {
+  if (dangerStartedAt === null) {
+    dangerStartedAt = now;
+    el.countdown.classList.add('is-active');
+  }
+
+  const remainingMs = GAME_OVER_DELAY_MS - (now - dangerStartedAt);
+
+  if (remainingMs <= 0) {
+    el.countdown.textContent = '';
+    el.countdown.classList.remove('is-active', 'is-urgent');
+    endGame();
+    return;
+  }
+
+  const remainingSeconds = Math.ceil(remainingMs / 1000);
+
+  el.status.textContent = `Игра окончится через ${remainingSeconds} сек.`;
+  el.countdown.textContent = String(remainingSeconds);
+  el.countdown.classList.toggle('is-urgent', remainingSeconds === 1);
+}
+
+function endGame() {
   if (gameOver) return;
 
   gameOver = true;
+  el.countdown.textContent = '';
+  el.countdown.classList.remove('is-active', 'is-urgent');
+
   el.status.textContent = 'Игра окончена';
   leaderboard.message.textContent = 'Введите имя и отправьте результат.';
 }
@@ -593,10 +627,11 @@ loadLeaderboard();
 
   el.restart.addEventListener('click', restart);
 
- function restart() {
+function restart() {
   Composite.clear(engine.world, true);
   mergeQueue.length = 0;
 
+  dangerStartedAt = null;
   score = 0;
   gameOver = false;
   canDrop = true;
@@ -605,7 +640,8 @@ loadLeaderboard();
 
   leaderboard.message.textContent = '';
   el.status.textContent = 'Продолжай!';
-
+  el.countdown.textContent = '';
+  el.countdown.classList.remove('is-active', 'is-urgent');
   nextLevel = randomSpawnLevel();
   updateScoreUI();
   updatePreview();

@@ -597,3 +597,65 @@ section { /* Чтобы секции не схлопывались и имели
     width: min(420px, 100%);
   }
 }
+
+.danger-countdown {
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.7);
+
+  color: #fff7dc;
+  font: 800 clamp(64px, 16vw, 110px) / 1 "Nunito", sans-serif;
+  text-align: center;
+  text-shadow:
+    0 4px 0 #a84f3d,
+    0 8px 20px rgba(69, 30, 20, 0.4);
+
+  opacity: 0;
+  pointer-events: none;
+}
+
+.danger-countdown.is-active {
+  animation: countdown-pop 0.85s ease-out infinite;
+}
+
+.danger-countdown.is-urgent {
+  color: #fff0a8;
+  text-shadow:
+    0 4px 0 #b83232,
+    0 8px 24px rgba(130, 20, 20, 0.55);
+}
+
+@keyframes countdown-pop {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.65);
+  }
+
+  20% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.12);
+  }
+
+  38% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  80% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.9);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .danger-countdown.is-active {
+    animation: none;
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+}
