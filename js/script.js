@@ -115,8 +115,42 @@ const supabaseClient = window.supabase.createClient(
   const WALL = 60;
   const BEST_KEY = 'dinoSuikaBest';
 
-  const mergeSound = new Audio('sounds/melon.mp3');mergeSound.volume = 0.5; // Громкость от 0 до 1
-  const bigMergeSound = new Audio('sounds/troodon.mp3');bigMergeSound.volume = 0.7;
+
+
+const SOUND_FILES = {
+  drop: 'sounds/swist.mp3',
+  land: 'sounds/stuk.mp3',
+  merge: 'sounds/melon.mp3',
+  bigMerge: 'sounds/troodon.mp3',
+  countdown: 'sounds/click.mp3',
+  gameOver: 'sounds/boom.mp3',
+  restart: 'sounds/sword.mp3'
+};
+
+const SOUND_VOLUME = {
+  drop: 0.1,
+  land: 0.2,
+  merge: 0.35,
+  bigMerge: 0.65,
+  countdown: 0.3,
+  gameOver: 0.55,
+  restart: 0.4
+};
+
+function playSound(name) {
+  const src = SOUND_FILES[name];
+  if (!src) return;
+
+  const audio = new Audio(src);
+  audio.volume = SOUND_VOLUME[name] ?? 0.5;
+
+  audio.play().catch((error) => {
+    // Автовоспроизведение может быть запрещено до действия игрока.
+    console.warn(`Не удалось проиграть звук "${name}":`, error);
+  });
+}
+
+
   // ================= DOM =================
   const el = {
     area: document.querySelector('.game-canvas-area'),
@@ -133,6 +167,10 @@ const supabaseClient = window.supabase.createClient(
 
   const GAME_OVER_DELAY_MS = 3000;
   let dangerStartedAt = null;
+  let lastCountdownSecond = null;
+  let lastLandSoundAt = 0;
+  const LAND_SOUND_COOLDOWN_MS = 120;
+
 
   if (
     !el.area ||
@@ -288,13 +326,6 @@ loadLeaderboard();
   const randomSpawnLevel = () => Math.floor(Math.random() * SPAWN_LEVELS);
   const fmt = (number) => number.toLocaleString('ru-RU');
 
-  function playMergeSound() {
-  mergeSound.currentTime = 0; // Начать звук сначала
-  mergeSound.play().catch((error) => {
-    console.warn('Не удалось проиграть звук слияния:', error);
-  });
-}
-
   function measure() {
     W = el.area.clientWidth;
     H = el.area.clientHeight;
@@ -377,7 +408,7 @@ loadLeaderboard();
     const x = clamp(aimX, radius + 1, W - radius - 1);
 
     createDino(level, x, radius + 2);
-
+    playSound('drop');
     canDrop = false;
     setTimeout(() => {
       canDrop = true;
@@ -388,20 +419,46 @@ loadLeaderboard();
   }
 
   // ================= СЛИЯНИЕ =================
-  Events.on(engine, 'collisionStart', (event) => {
-    for (const { bodyA, bodyB } of event.pairs) {
-      const a = bodyA;
-      const b = bodyB;
+Events.on(engine, 'collisionStart', (event) => {
+  let hasDinoCollision = false;
 
-      if (a.label !== 'dino' || b.label !== 'dino') continue;
-      if (a.removed || b.removed) continue;
-      if (a.dinoLevel !== b.dinoLevel) continue;
+  for (const { bodyA, bodyB } of event.pairs) {
+    const a = bodyA;
+    const b = bodyB;
 
-      a.removed = true;
-      b.removed = true;
-      mergeQueue.push({ a, b });
+    if (a.label !== 'dino' && b.label !== 'dino') {
+      continue;
     }
-  });
+
+    hasDinoCollision = true;
+
+    // Слияние только двух динозавров одного уровня.
+    if (
+      a.label !== 'dino' ||
+      b.label !== 'dino' ||
+      a.removed ||
+      b.removed ||
+      a.dinoLevel !== b.dinoLevel
+    ) {
+      continue;
+    }
+
+    a.removed = true;
+    b.removed = true;
+    mergeQueue.push({ a, b });
+  }
+
+  // Тихий звук контакта, ограниченный кулдауном.
+  const now = performance.now();
+
+  if (
+    hasDinoCollision &&
+    now - lastLandSoundAt >= LAND_SOUND_COOLDOWN_MS
+  ) {
+    lastLandSoundAt = now;
+    playSound('land');
+  }
+});
 
   function processMerges() {
     while (mergeQueue.length) {
@@ -415,18 +472,10 @@ loadLeaderboard();
       const y = (a.position.y + b.position.y) / 2;
 
       if (level === MAX_LEVEL) {
-  bigMergeSound.currentTime = 0;
-  bigMergeSound.play().catch((error) => {
-    console.warn('Не удалось проиграть особый звук:', error);
-  });
-
+  playSound('bigMerge');
   addScore(DINOS[level].points * 2);
 } else {
-  mergeSound.currentTime = 0;
-  mergeSound.play().catch((error) => {
-    console.warn('Не удалось проиграть звук слияния:', error);
-  });
-
+  playSound('merge');
   createDino(level + 1, x, y);
   addScore(DINOS[level + 1].points);
 }
@@ -447,13 +496,14 @@ function checkGameOver(now) {
     return body.position.y - radius < limitY;
   });
 
-  if (!dinoAboveLine) {
-    dangerStartedAt = null;
-    el.status.textContent = 'Продолжай!';
-    el.countdown.textContent = '';
-    el.countdown.classList.remove('is-active', 'is-urgent');
-    return;
-  }
+if (!dinoAboveLine) {
+  dangerStartedAt = null;
+  lastCountdownSecond = null;
+  el.status.textContent = 'Продолжай!';
+  el.countdown.textContent = '';
+  el.countdown.classList.remove('is-active', 'is-urgent');
+  return;
+}
 
   if (dangerStartedAt === null) {
     dangerStartedAt = now;
@@ -471,15 +521,21 @@ function checkGameOver(now) {
 
   const remainingSeconds = Math.ceil(remainingMs / 1000);
 
-  el.status.textContent = `Игра окончится через ${remainingSeconds} сек.`;
-  el.countdown.textContent = String(remainingSeconds);
-  el.countdown.classList.toggle('is-urgent', remainingSeconds === 1);
+if (remainingSeconds !== lastCountdownSecond) {
+  lastCountdownSecond = remainingSeconds;
+  playSound('countdown');
+}
+
+el.status.textContent = `Игра окончится через ${remainingSeconds} сек.`;
+el.countdown.textContent = String(remainingSeconds);
+el.countdown.classList.toggle('is-urgent', remainingSeconds === 1);
 }
 
 function endGame() {
   if (gameOver) return;
 
   gameOver = true;
+  playSound('gameOver');
   el.countdown.textContent = '';
   el.countdown.classList.remove('is-active', 'is-urgent');
 
@@ -628,6 +684,8 @@ function endGame() {
   el.restart.addEventListener('click', restart);
 
 function restart() {
+  playSound('restart');
+
   Composite.clear(engine.world, true);
   mergeQueue.length = 0;
 
