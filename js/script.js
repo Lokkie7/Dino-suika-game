@@ -31,7 +31,7 @@
   const GRACE_MS = 1500;
   const BEST_KEY = 'dinoSuikaBest';
   const GAME_OVER_DELAY_MS = 3000;
-  const MAX_SUBMIT_SCORE = 10000;
+  const MAX_SUBMIT_SCORE = 100000;
 
   // Фиксированные логические координаты физического мира.
   const WORLD_WIDTH = 500;
