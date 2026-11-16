@@ -11,17 +11,17 @@
 
   // ================= НАСТРОЙКИ =================
   const DINOS = [
-    { name: 'Компсогнат', desc: 'Самый маленький.', r: 22, color: '#e6de94', points: 1, sprite: 'images/dino1.webp' },
-    { name: 'Птеранодон', desc: 'Парит в небе.', r: 29, color: '#cbd4c7', points: 3, sprite: 'images/dino2.webp' },
-    { name: 'Велоцираптор', desc: 'Быстрый охотник.', r: 36, color: '#9db4f7', points: 6, sprite: 'images/dino3.webp' },
-    { name: 'Пахицефалозавр', desc: 'Боньк.', r: 44, color: '#f2b29e', points: 10, sprite: 'images/dino4.webp' },
-    { name: 'Диллофозавр', desc: 'Ночной кошмар.', r: 52, color: '#f4d1e8', points: 15, sprite: 'images/dino5.webp' },
-    { name: 'Тенонтозавр', desc: 'Лошадка.', r: 60, color: '#ecd3ad', points: 21, sprite: 'images/dino6.webp' },
-    { name: 'Карнотавр', desc: 'Динозавр бык.', r: 68, color: '#edb1ad', points: 28, sprite: 'images/dino7.webp' },
-    { name: 'Кентрозавр', desc: 'С костяными пластинами.', r: 76, color: '#ede1b7', points: 36, sprite: 'images/dino8.webp' },
-    { name: 'Тираннозавр', desc: 'Король ящеров.', r: 86, color: '#edc2af', points: 45, sprite: 'images/dino9.webp' },
-    { name: 'Трицератопс', desc: 'Король мёртв, да здравствует король', r: 96, color: '#ecdbbb', points: 55, sprite: 'images/dino10.webp' },
-    { name: 'Брахиозавр', desc: 'Гигант.', r: 110, color: '#eab7a1', points: 66, sprite: 'images/dino11.webp' }
+    { name: 'Компсогнат', desc: 'Самый маленький.', r: 18, color: '#e6de94', points: 1, sprite: 'images/dino1.webp' },
+    { name: 'Птеранодон', desc: 'Парит в небе.', r: 25, color: '#cbd4c7', points: 3, sprite: 'images/dino2.webp' },
+    { name: 'Велоцираптор', desc: 'Быстрый охотник.', r: 32, color: '#9db4f7', points: 6, sprite: 'images/dino3.webp' },
+    { name: 'Пахицефалозавр', desc: 'Боньк.', r: 40, color: '#f2b29e', points: 10, sprite: 'images/dino4.webp' },
+    { name: 'Диллофозавр', desc: 'Ночной кошмар.', r: 48, color: '#f4d1e8', points: 15, sprite: 'images/dino5.webp' },
+    { name: 'Тенонтозавр', desc: 'Лошадка.', r: 56, color: '#ecd3ad', points: 21, sprite: 'images/dino6.webp' },
+    { name: 'Карнотавр', desc: 'Динозавр бык.', r: 64, color: '#edb1ad', points: 28, sprite: 'images/dino7.webp' },
+    { name: 'Кентрозавр', desc: 'С костяными пластинами.', r: 72, color: '#ede1b7', points: 36, sprite: 'images/dino8.webp' },
+    { name: 'Тираннозавр', desc: 'Король ящеров.', r: 82, color: '#edc2af', points: 45, sprite: 'images/dino9.webp' },
+    { name: 'Трицератопс', desc: 'Король мёртв, да здравствует король', r: 92, color: '#ecdbbb', points: 55, sprite: 'images/dino10.webp' },
+    { name: 'Брахиозавр', desc: 'Гигант.', r: 106, color: '#eab7a1', points: 66, sprite: 'images/dino11.webp' }
   ];
 
   const SPRITE_SCALE = 0.9;
