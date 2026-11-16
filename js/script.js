@@ -39,9 +39,8 @@
   const WALL = 60;
   const DPR_LIMIT = 2;
 
+  // Звуки drop и land удалены по запросу.
   const SOUND_FILES = {
-    drop: 'sounds/swist.mp3',
-    land: 'sounds/stuk.mp3',
     merge: 'sounds/melon.mp3',
     bigMerge: 'sounds/troodon.mp3',
     countdown: 'sounds/click.mp3',
@@ -50,8 +49,6 @@
   };
 
   const SOUND_VOLUME = {
-    drop: 0.15,
-    land: 0.25,
     merge: 0.35,
     bigMerge: 0.65,
     countdown: 0.3,
@@ -59,28 +56,26 @@
     restart: 0.4
   };
 
-const audioPool = {};
+  const audioPool = {};
 
-for (const [name, src] of Object.entries(SOUND_FILES)) {
-  const audio = new Audio(src);
-  audio.preload = 'auto';
-  audioPool[name] = audio;
-}
+  for (const [name, src] of Object.entries(SOUND_FILES)) {
+    const audio = new Audio(src);
+    audio.preload = 'auto';
+    audioPool[name] = audio;
+  }
 
-function playSound(name) {
-  const audio = audioPool[name];
-  if (!audio) return;
+  function playSound(name) {
+    const audio = audioPool[name];
+    if (!audio) return;
 
-  audio.pause();
-  audio.currentTime = 0;
-  audio.volume = SOUND_VOLUME[name] ?? 0.5;
+    audio.pause();
+    audio.currentTime = 0;
+    audio.volume = SOUND_VOLUME[name] ?? 0.5;
 
-  audio.play().catch((error) => {
-    // На мобильных браузерах воспроизведение может быть запрещено
-    // до первого действия пользователя.
-    console.warn(`Не удалось проиграть звук "${name}":`, error);
-  });
-}
+    audio.play().catch((error) => {
+      console.warn(`Не удалось проиграть звук "${name}":`, error);
+    });
+  }
 
   // ================= DOM =================
   const el = {
@@ -155,22 +150,11 @@ function playSound(name) {
     return;
   }
 
-  // Загружаем спрайты после объявления requestRender.
-  let renderDirty = true;
-  let renderFrame = 0;
-  let resizeFrame = 0;
-
-  function requestRender() {
-    renderDirty = true;
-
-    if (!renderFrame) {
-      renderFrame = window.requestAnimationFrame(draw);
-    }
-  }
-
   DINOS.forEach((dino) => {
     dino.img = new Image();
-    dino.img.onload = requestRender;
+    dino.img.onload = () => {
+      // Новый кадр появится в следующем requestAnimationFrame.
+    };
     dino.img.src = dino.sprite;
   });
 
@@ -263,7 +247,7 @@ function playSound(name) {
 
     if (!nextW || !nextH) return;
 
-    // ВАЖНО: при resize меняется только отображение.
+    // При resize меняется только отображение.
     // Позиции, скорости и физические тела не преобразуются.
     W = nextW;
     H = nextH;
@@ -280,8 +264,6 @@ function playSound(name) {
       DINOS[nextLevel].r,
       WORLD_WIDTH - DINOS[nextLevel].r
     );
-
-    requestRender();
   }
 
   // ================= ДИНОЗАВРЫ =================
@@ -301,7 +283,6 @@ function playSound(name) {
     body.removed = false;
 
     Composite.add(engine.world, body);
-    requestRender();
 
     return body;
   }
@@ -316,10 +297,8 @@ function playSound(name) {
     createDino(level, x, radius + 2);
 
     canDrop = false;
-
     window.setTimeout(() => {
       canDrop = true;
-      requestRender();
     }, DROP_COOLDOWN);
 
     nextLevel = randomSpawnLevel();
@@ -330,17 +309,16 @@ function playSound(name) {
       DINOS[nextLevel].r,
       WORLD_WIDTH - DINOS[nextLevel].r
     );
-
-    requestRender();
   }
 
-  // Сохраняем оба поведения: очередь слияния и звук приземления.
+  // Обработчик и ставит одинаковые динозавры в очередь слияния.
   Events.on(engine, 'collisionStart', (event) => {
     for (const { bodyA, bodyB } of event.pairs) {
       const a = bodyA;
       const b = bodyB;
 
       if (a.label !== 'dino' && b.label !== 'dino') continue;
+
       if (
         a.label !== 'dino' ||
         b.label !== 'dino' ||
@@ -388,8 +366,6 @@ function playSound(name) {
         createDino(level + 1, x, y);
         addScore(DINOS[level + 1].points);
       }
-
-      requestRender();
     }
   }
 
@@ -411,14 +387,12 @@ function playSound(name) {
       el.status.textContent = 'Продолжай!';
       el.countdown.textContent = '';
       el.countdown.classList.remove('is-active', 'is-urgent');
-      requestRender();
       return;
     }
 
     if (dangerStartedAt === null) {
       dangerStartedAt = now;
       el.countdown.classList.add('is-active');
-      requestRender();
     }
 
     const remainingMs = GAME_OVER_DELAY_MS - (now - dangerStartedAt);
@@ -435,7 +409,6 @@ function playSound(name) {
     if (remainingSeconds !== lastCountdownSecond) {
       lastCountdownSecond = remainingSeconds;
       playSound('countdown');
-      requestRender();
     }
 
     el.status.textContent = `Игра окончится через ${remainingSeconds} сек.`;
@@ -453,8 +426,6 @@ function playSound(name) {
     el.countdown.classList.remove('is-active', 'is-urgent');
     el.status.textContent = 'Игра окончена';
     leaderboard.message.textContent = 'Введите имя и отправьте результат.';
-
-    requestRender();
   }
 
   // ================= СЧЁТ И UI =================
@@ -481,8 +452,6 @@ function playSound(name) {
     el.nextDesc.textContent = dino.desc;
     el.preview.style.backgroundColor = 'transparent';
     el.preview.style.backgroundImage = `url("${dino.sprite}")`;
-
-    requestRender();
   }
 
   // ================= ОТРИСОВКА =================
@@ -526,11 +495,10 @@ function playSound(name) {
   }
 
   function draw() {
-    renderFrame = 0;
-
-    if (!renderDirty || !W || !H) return;
-
-    renderDirty = false;
+    if (!W || !H) {
+      window.requestAnimationFrame(draw);
+      return;
+    }
 
     const dpr = getDpr();
 
@@ -574,30 +542,16 @@ function playSound(name) {
         canDrop ? 0.6 : 0.3
       );
     }
+
+    window.requestAnimationFrame(draw);
   }
 
-  function hasMovingDinos() {
-    return Composite.allBodies(engine.world).some((body) => {
-      if (body.label !== 'dino' || body.removed) return false;
-
-      const speedSquared =
-        body.velocity.x * body.velocity.x +
-        body.velocity.y * body.velocity.y;
-
-      return speedSquared > 0.04 || Math.abs(body.angularVelocity) > 0.02;
-    });
-  }
-
-  // Перерисовываем движущиеся тела; неподвижная сцена не нагружает Canvas.
+  // ================= ИГРОВОЙ ЦИКЛ =================
   Events.on(engine, 'afterUpdate', () => {
     processMerges();
 
     if (!gameOver) {
       checkGameOver(performance.now());
-    }
-
-    if (hasMovingDinos()) {
-      requestRender();
     }
   });
 
@@ -616,7 +570,6 @@ function playSound(name) {
 
   el.area.addEventListener('pointermove', (event) => {
     aimX = pointerToWorldX(event);
-    requestRender();
   });
 
   el.area.addEventListener('pointerdown', (event) => {
@@ -633,14 +586,12 @@ function playSound(name) {
         DINOS[nextLevel].r,
         WORLD_WIDTH - DINOS[nextLevel].r
       );
-      requestRender();
     } else if (event.code === 'ArrowRight') {
       aimX = clamp(
         aimX + 10,
         DINOS[nextLevel].r,
         WORLD_WIDTH - DINOS[nextLevel].r
       );
-      requestRender();
     } else if (event.code === 'Space' && !event.repeat) {
       event.preventDefault();
       drop();
@@ -759,7 +710,6 @@ function playSound(name) {
 
     updateScoreUI();
     updatePreview();
-    requestRender();
   }
 
   el.restart.addEventListener('click', restart);
@@ -800,7 +750,7 @@ function playSound(name) {
     const runner = Runner.create();
     Runner.run(runner, engine);
 
-    requestRender();
+    window.requestAnimationFrame(draw);
     loadLeaderboard();
   }
 
