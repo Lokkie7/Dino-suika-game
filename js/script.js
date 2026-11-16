@@ -32,7 +32,6 @@
   const BEST_KEY = 'dinoSuikaBest';
   const GAME_OVER_DELAY_MS = 3000;
   const MAX_SUBMIT_SCORE = 10000;
-  const LAND_SOUND_COOLDOWN_MS = 120;
 
   // Фиксированные логические координаты физического мира.
   const WORLD_WIDTH = 500;
@@ -195,7 +194,6 @@ function playSound(name) {
 
   let dangerStartedAt = null;
   let lastCountdownSecond = null;
-  let lastLandSoundAt = 0;
 
   const mergeQueue = [];
 
@@ -316,7 +314,6 @@ function playSound(name) {
     const x = clamp(aimX, radius, WORLD_WIDTH - radius);
 
     createDino(level, x, radius + 2);
-    playSound('drop');
 
     canDrop = false;
 
@@ -339,15 +336,11 @@ function playSound(name) {
 
   // Сохраняем оба поведения: очередь слияния и звук приземления.
   Events.on(engine, 'collisionStart', (event) => {
-    let hasDinoCollision = false;
-
     for (const { bodyA, bodyB } of event.pairs) {
       const a = bodyA;
       const b = bodyB;
 
       if (a.label !== 'dino' && b.label !== 'dino') continue;
-      hasDinoCollision = true;
-
       if (
         a.label !== 'dino' ||
         b.label !== 'dino' ||
@@ -361,16 +354,6 @@ function playSound(name) {
       a.removed = true;
       b.removed = true;
       mergeQueue.push({ a, b });
-    }
-
-    const now = performance.now();
-
-    if (
-      hasDinoCollision &&
-      now - lastLandSoundAt >= LAND_SOUND_COOLDOWN_MS
-    ) {
-      lastLandSoundAt = now;
-      playSound('land');
     }
   });
 
