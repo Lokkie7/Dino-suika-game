@@ -1,5 +1,5 @@
 (() => {
-  const { Engine, Runner, Bodies, Composite, Events, Body } = Matter;
+  const { Engine, Runner, Bodies, Composite, Events } = Matter;
 
   const SUPABASE_URL = 'https://xguggrjrlfztcyebdmrw.supabase.co';
   const SUPABASE_ANON_KEY = 'sb_publishable_N6CPgWedpnQWcba2h_w9Cg_vdGj4pU3';
@@ -24,11 +24,6 @@
     { name: 'Брахиозавр', desc: 'Гигант.', r: 88, color: '#eab7a1', points: 66, sprite: 'images/dino11.webp' }
   ];
 
-  DINOS.forEach((dino) => {
-    dino.img = new Image();
-    dino.img.src = dino.sprite;
-  });
-
   const SPRITE_SCALE = 0.9;
   const MAX_LEVEL = DINOS.length - 1;
   const SPAWN_LEVELS = 5;
@@ -39,6 +34,7 @@
   const MAX_SUBMIT_SCORE = 10000;
   const LAND_SOUND_COOLDOWN_MS = 120;
 
+  // Фиксированные логические координаты физического мира.
   const WORLD_WIDTH = 500;
   const WORLD_HEIGHT = 640;
   const WALL = 60;
@@ -117,6 +113,7 @@
     return;
   }
 
+  // ================= ФИЗИКА И CANVAS =================
   const engine = Engine.create();
   engine.gravity.y = 1;
   engine.positionIterations = 10;
@@ -142,12 +139,37 @@
 
   const ctx = canvas.getContext('2d');
 
+  if (!ctx) {
+    console.error('Не удалось создать Canvas 2D-контекст.');
+    return;
+  }
+
+  // Загружаем спрайты после объявления requestRender.
+  let renderDirty = true;
+  let renderFrame = 0;
+  let resizeFrame = 0;
+
+  function requestRender() {
+    renderDirty = true;
+
+    if (!renderFrame) {
+      renderFrame = window.requestAnimationFrame(draw);
+    }
+  }
+
+  DINOS.forEach((dino) => {
+    dino.img = new Image();
+    dino.img.onload = requestRender;
+    dino.img.src = dino.sprite;
+  });
+
   let W = 0;
   let H = 0;
   let scale = 1;
   let offsetX = 0;
   let offsetY = 0;
   let limitY = 0;
+
   let wallBodies = [];
 
   let score = 0;
@@ -169,102 +191,27 @@
   const randomSpawnLevel = () => Math.floor(Math.random() * SPAWN_LEVELS);
   const fmt = (number) => number.toLocaleString('ru-RU');
 
+  function getDpr() {
+    return Math.min(window.devicePixelRatio || 1, DPR_LIMIT);
+  }
+
+  function setCanvasSize() {
+    const dpr = getDpr();
+    const pixelWidth = Math.max(1, Math.round(W * dpr));
+    const pixelHeight = Math.max(1, Math.round(H * dpr));
+
+    if (canvas.width !== pixelWidth || canvas.height !== pixelHeight) {
+      canvas.width = pixelWidth;
+      canvas.height = pixelHeight;
+    }
+  }
+
   function getLimitY() {
     const areaRect = el.area.getBoundingClientRect();
     const limitRect = el.limitImg.getBoundingClientRect();
     const cssY = limitRect.top - areaRect.top + limitRect.height / 2;
-    return clamp(cssY / scale - offsetY, 0, WORLD_HEIGHT);
-  }
 
-  function setCanvasTransform() {
-    const dpr = Math.min(window.devicePixelRatio || 1, DPR_LIMIT);
-    canvas.width = Math.max(1, Math.round(W * dpr));
-    canvas.height = Math.max(1, Math.round(H * dpr));
-
-    ctx.setTransform(
-      dpr * scale,
-      0,
-      0,
-      dpr * scale,
-      dpr * scale * offsetX,
-      dpr * scale * offsetY
-    );
-  }
-
-  function worldToCanvasX(x) {
-    return offsetX + x * scale;
-  }
-
-  function worldToCanvasY(y) {
-    return offsetY + y * scale;
-  }
-
-  function canvasToWorldX(x) {
-    return (x - offsetX) / scale;
-  }
-
-  function canvasToWorldY(y) {
-    return (y - offsetY) / scale;
-  }
-
-  function measure() {
-    const nextW = el.area.clientWidth;
-    const nextH = el.area.clientHeight;
-    if (!nextW || !nextH) return;
-
-    const previousScale = scale;
-    const previousOffsetX = offsetX;
-    const previousOffsetY = offsetY;
-    const hadSize = W > 0 && H > 0;
-
-    W = nextW;
-    H = nextH;
-    scale = Math.min(W / WORLD_WIDTH, H / WORLD_HEIGHT);
-    offsetX = (W - WORLD_WIDTH * scale) / 2;
-    offsetY = (H - WORLD_HEIGHT * scale) / 2;
-
-    setCanvasTransform();
-    limitY = getLimitY();
-    aimX = clamp(aimX, DINOS[nextLevel].r + 1, WORLD_WIDTH - DINOS[nextLevel].r - 1);
-
-    if (hadSize) {
-      const ratio = scale / previousScale;
-      const worldBodies = Composite.allBodies(engine.world);
-
-      for (const body of worldBodies) {
-        if (body.isStatic) continue;
-
-        const oldScreenX = previousOffsetX + body.position.x * previousScale;
-        const oldScreenY = previousOffsetY + body.position.y * previousScale;
-
-        const nextX = clamp(
-          (oldScreenX - offsetX) / scale,
-          DINOS[body.dinoLevel].r,
-          WORLD_WIDTH - DINOS[body.dinoLevel].r
-        );
-        const nextY = clamp(
-          (oldScreenY - offsetY) / scale,
-          DINOS[body.dinoLevel].r,
-          WORLD_HEIGHT - DINOS[body.dinoLevel].r
-        );
-
-        Body.setPosition(body, { x: nextX, y: nextY });
-        Body.setVelocity(body, {
-          x: body.velocity.x * ratio,
-          y: body.velocity.y * ratio
-        });
-        Body.setAngularVelocity(body, body.angularVelocity * ratio);
-      }
-
-      for (const wall of wallBodies) {
-        Composite.remove(engine.world, wall);
-      }
-    }
-
-    wallBodies = createWalls();
-    Composite.add(engine.world, wallBodies);
-
-    limitY = getLimitY();
+    return clamp((cssY - offsetY) / scale, 0, WORLD_HEIGHT);
   }
 
   function createWalls() {
@@ -300,10 +247,38 @@
     ];
   }
 
+  function measure() {
+    const nextW = el.area.clientWidth;
+    const nextH = el.area.clientHeight;
+
+    if (!nextW || !nextH) return;
+
+    // ВАЖНО: при resize меняется только отображение.
+    // Позиции, скорости и физические тела не преобразуются.
+    W = nextW;
+    H = nextH;
+
+    scale = Math.min(W / WORLD_WIDTH, H / WORLD_HEIGHT);
+    offsetX = (W - WORLD_WIDTH * scale) / 2;
+    offsetY = (H - WORLD_HEIGHT * scale) / 2;
+
+    setCanvasSize();
+
+    limitY = getLimitY();
+    aimX = clamp(
+      aimX,
+      DINOS[nextLevel].r,
+      WORLD_WIDTH - DINOS[nextLevel].r
+    );
+
+    requestRender();
+  }
+
+  // ================= ДИНОЗАВРЫ =================
   function createDino(level, x, y) {
     const dino = DINOS[level];
-    const radius = dino.r;
-    const body = Bodies.circle(x, y, radius, {
+
+    const body = Bodies.circle(x, y, dino.r, {
       label: 'dino',
       restitution: 0.25,
       friction: 0.8,
@@ -314,7 +289,10 @@
     body.dinoLevel = level;
     body.dropTime = performance.now();
     body.removed = false;
+
     Composite.add(engine.world, body);
+    requestRender();
+
     return body;
   }
 
@@ -329,15 +307,25 @@
     playSound('drop');
 
     canDrop = false;
+
     window.setTimeout(() => {
       canDrop = true;
+      requestRender();
     }, DROP_COOLDOWN);
 
     nextLevel = randomSpawnLevel();
     updatePreview();
-    aimX = clamp(aimX, DINOS[nextLevel].r, WORLD_WIDTH - DINOS[nextLevel].r);
+
+    aimX = clamp(
+      aimX,
+      DINOS[nextLevel].r,
+      WORLD_WIDTH - DINOS[nextLevel].r
+    );
+
+    requestRender();
   }
 
+  // Сохраняем оба поведения: очередь слияния и звук приземления.
   Events.on(engine, 'collisionStart', (event) => {
     let hasDinoCollision = false;
 
@@ -364,7 +352,11 @@
     }
 
     const now = performance.now();
-    if (hasDinoCollision && now - lastLandSoundAt >= LAND_SOUND_COOLDOWN_MS) {
+
+    if (
+      hasDinoCollision &&
+      now - lastLandSoundAt >= LAND_SOUND_COOLDOWN_MS
+    ) {
       lastLandSoundAt = now;
       playSound('land');
     }
@@ -378,12 +370,20 @@
       Composite.remove(engine.world, a);
       Composite.remove(engine.world, b);
 
+      const nextRadius =
+        level < MAX_LEVEL ? DINOS[level + 1].r : DINOS[level].r;
+
       const x = clamp(
         (a.position.x + b.position.x) / 2,
-        level < MAX_LEVEL ? DINOS[level + 1].r : DINOS[level].r,
-        WORLD_WIDTH - (level < MAX_LEVEL ? DINOS[level + 1].r : DINOS[level].r)
+        nextRadius,
+        WORLD_WIDTH - nextRadius
       );
-      const y = (a.position.y + b.position.y) / 2;
+
+      const y = clamp(
+        (a.position.y + b.position.y) / 2,
+        nextRadius,
+        WORLD_HEIGHT - nextRadius
+      );
 
       if (level === MAX_LEVEL) {
         playSound('bigMerge');
@@ -393,11 +393,15 @@
         createDino(level + 1, x, y);
         addScore(DINOS[level + 1].points);
       }
+
+      requestRender();
     }
   }
 
+  // ================= ПРОВЕРКА ПРОИГРЫША =================
   function checkGameOver(now) {
     const bodies = Composite.allBodies(engine.world);
+
     const dinoAboveLine = bodies.some((body) => {
       if (body.label !== 'dino' || body.removed) return false;
       if (now - body.dropTime <= GRACE_MS) return false;
@@ -412,15 +416,18 @@
       el.status.textContent = 'Продолжай!';
       el.countdown.textContent = '';
       el.countdown.classList.remove('is-active', 'is-urgent');
+      requestRender();
       return;
     }
 
     if (dangerStartedAt === null) {
       dangerStartedAt = now;
       el.countdown.classList.add('is-active');
+      requestRender();
     }
 
     const remainingMs = GAME_OVER_DELAY_MS - (now - dangerStartedAt);
+
     if (remainingMs <= 0) {
       el.countdown.textContent = '';
       el.countdown.classList.remove('is-active', 'is-urgent');
@@ -429,9 +436,11 @@
     }
 
     const remainingSeconds = Math.ceil(remainingMs / 1000);
+
     if (remainingSeconds !== lastCountdownSecond) {
       lastCountdownSecond = remainingSeconds;
       playSound('countdown');
+      requestRender();
     }
 
     el.status.textContent = `Игра окончится через ${remainingSeconds} сек.`;
@@ -444,12 +453,16 @@
 
     gameOver = true;
     playSound('gameOver');
+
     el.countdown.textContent = '';
     el.countdown.classList.remove('is-active', 'is-urgent');
     el.status.textContent = 'Игра окончена';
     leaderboard.message.textContent = 'Введите имя и отправьте результат.';
+
+    requestRender();
   }
 
+  // ================= СЧЁТ И UI =================
   function addScore(points) {
     score += points;
 
@@ -473,8 +486,11 @@
     el.nextDesc.textContent = dino.desc;
     el.preview.style.backgroundColor = 'transparent';
     el.preview.style.backgroundImage = `url("${dino.sprite}")`;
+
+    requestRender();
   }
 
+  // ================= ОТРИСОВКА =================
   function drawDino(body, alpha = 1) {
     const dino = DINOS[body.dinoLevel];
     const radius = dino.r;
@@ -489,7 +505,11 @@
     ctx.fillStyle = dino.color;
     ctx.fill();
 
-    const hasSprite = dino.img && dino.img.complete && dino.img.naturalWidth > 0;
+    const hasSprite =
+      dino.img &&
+      dino.img.complete &&
+      dino.img.naturalWidth > 0;
+
     if (hasSprite) {
       const size = radius * 2 * SPRITE_SCALE;
       ctx.drawImage(dino.img, -size / 2, -size / 2, size, size);
@@ -506,20 +526,29 @@
     ctx.lineWidth = 3;
     ctx.strokeStyle = 'rgba(69, 91, 61, 0.6)';
     ctx.stroke();
+
     ctx.restore();
   }
 
   function draw() {
+    renderFrame = 0;
+
+    if (!renderDirty || !W || !H) return;
+
+    renderDirty = false;
+
+    const dpr = getDpr();
+
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     ctx.setTransform(
-      Math.min(window.devicePixelRatio || 1, DPR_LIMIT) * scale,
+      dpr * scale,
       0,
       0,
-      Math.min(window.devicePixelRatio || 1, DPR_LIMIT) * scale,
-      Math.min(window.devicePixelRatio || 1, DPR_LIMIT) * scale * offsetX,
-      Math.min(window.devicePixelRatio || 1, DPR_LIMIT) * scale * offsetY
+      dpr * scale,
+      dpr * scale * offsetX,
+      dpr * scale * offsetY
     );
 
     for (const body of Composite.allBodies(engine.world)) {
@@ -550,20 +579,41 @@
         canDrop ? 0.6 : 0.3
       );
     }
-
-    requestAnimationFrame(draw);
   }
 
+  function hasMovingDinos() {
+    return Composite.allBodies(engine.world).some((body) => {
+      if (body.label !== 'dino' || body.removed) return false;
+
+      const speedSquared =
+        body.velocity.x * body.velocity.x +
+        body.velocity.y * body.velocity.y;
+
+      return speedSquared > 0.04 || Math.abs(body.angularVelocity) > 0.02;
+    });
+  }
+
+  // Перерисовываем движущиеся тела; неподвижная сцена не нагружает Canvas.
   Events.on(engine, 'afterUpdate', () => {
     processMerges();
-    if (!gameOver) checkGameOver(performance.now());
+
+    if (!gameOver) {
+      checkGameOver(performance.now());
+    }
+
+    if (hasMovingDinos()) {
+      requestRender();
+    }
   });
 
+  // ================= УПРАВЛЕНИЕ =================
   function pointerToWorldX(event) {
     const rect = canvas.getBoundingClientRect();
     const cssX = event.clientX - rect.left;
+    const worldX = (cssX - offsetX) / scale;
+
     return clamp(
-      canvasToWorldX(cssX),
+      worldX,
       DINOS[nextLevel].r,
       WORLD_WIDTH - DINOS[nextLevel].r
     );
@@ -571,70 +621,38 @@
 
   el.area.addEventListener('pointermove', (event) => {
     aimX = pointerToWorldX(event);
+    requestRender();
   });
 
   el.area.addEventListener('pointerdown', (event) => {
     if (event.pointerType === 'mouse' && event.button !== 0) return;
+
     aimX = pointerToWorldX(event);
     drop();
   });
 
   window.addEventListener('keydown', (event) => {
     if (event.code === 'ArrowLeft') {
-      aimX = clamp(aimX - 10, DINOS[nextLevel].r, WORLD_WIDTH - DINOS[nextLevel].r);
+      aimX = clamp(
+        aimX - 10,
+        DINOS[nextLevel].r,
+        WORLD_WIDTH - DINOS[nextLevel].r
+      );
+      requestRender();
     } else if (event.code === 'ArrowRight') {
-      aimX = clamp(aimX + 10, DINOS[nextLevel].r, WORLD_WIDTH - DINOS[nextLevel].r);
+      aimX = clamp(
+        aimX + 10,
+        DINOS[nextLevel].r,
+        WORLD_WIDTH - DINOS[nextLevel].r
+      );
+      requestRender();
     } else if (event.code === 'Space' && !event.repeat) {
       event.preventDefault();
       drop();
     }
   });
 
-  leaderboard.form.addEventListener('submit', async (event) => {
-    event.preventDefault();
-
-    if (!gameOver) {
-      leaderboard.message.textContent = 'Сначала закончи игру.';
-      return;
-    }
-
-    if (scoreSubmitted) {
-      leaderboard.message.textContent = 'Результат этой игры уже отправлен.';
-      return;
-    }
-
-    const playerName = leaderboard.name.value.trim().slice(0, 20);
-    if (!playerName) {
-      leaderboard.message.textContent = 'Введите имя.';
-      return;
-    }
-
-    if (!Number.isSafeInteger(score) || score < 0 || score > MAX_SUBMIT_SCORE) {
-      leaderboard.message.textContent = 'Этот результат не принимается. читер.';
-      return;
-    }
-
-    const durationSeconds = Math.floor((Date.now() - gameStartedAt) / 1000);
-    if (durationSeconds < 10) {
-      leaderboard.message.textContent = 'Ах ты грёбаный читер.';
-      return;
-    }
-
-    const { error } = await supabaseClient
-      .from('scores')
-      .insert({ player_name: playerName, score, duration_seconds: durationSeconds });
-
-    if (error) {
-      console.error('Не удалось сохранить результат:', error);
-      leaderboard.message.textContent = 'Не получилось сохранить результат.';
-      return;
-    }
-
-    scoreSubmitted = true;
-    leaderboard.message.textContent = 'Результат сохранён!';
-    await loadLeaderboard();
-  });
-
+  // ================= ТАБЛИЦА ЛИДЕРОВ =================
   async function loadLeaderboard() {
     const { data, error } = await supabaseClient
       .from('scores')
@@ -657,14 +675,70 @@
     }
   }
 
+  leaderboard.form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    if (!gameOver) {
+      leaderboard.message.textContent = 'Сначала закончи игру.';
+      return;
+    }
+
+    if (scoreSubmitted) {
+      leaderboard.message.textContent = 'Результат этой игры уже отправлен.';
+      return;
+    }
+
+    const playerName = leaderboard.name.value.trim().slice(0, 20);
+
+    if (!playerName) {
+      leaderboard.message.textContent = 'Введите имя.';
+      return;
+    }
+
+    if (
+      !Number.isSafeInteger(score) ||
+      score < 0 ||
+      score > MAX_SUBMIT_SCORE
+    ) {
+      leaderboard.message.textContent = 'Этот результат не принимается. читер.';
+      return;
+    }
+
+    const durationSeconds = Math.floor(
+      (Date.now() - gameStartedAt) / 1000
+    );
+
+    if (durationSeconds < 10) {
+      leaderboard.message.textContent = 'Ах ты грёбаный читер.';
+      return;
+    }
+
+    const { error } = await supabaseClient
+      .from('scores')
+      .insert({
+        player_name: playerName,
+        score,
+        duration_seconds: durationSeconds
+      });
+
+    if (error) {
+      console.error('Не удалось сохранить результат:', error);
+      leaderboard.message.textContent = 'Не получилось сохранить результат.';
+      return;
+    }
+
+    scoreSubmitted = true;
+    leaderboard.message.textContent = 'Результат сохранён!';
+    await loadLeaderboard();
+  });
+
+  // ================= РЕСТАРТ =================
   function restart() {
     playSound('restart');
+
     Composite.clear(engine.world, true);
     mergeQueue.length = 0;
 
-    for (const wall of wallBodies) {
-      Composite.remove(engine.world, wall);
-    }
     wallBodies = createWalls();
     Composite.add(engine.world, wallBodies);
 
@@ -682,32 +756,29 @@
     el.countdown.classList.remove('is-active', 'is-urgent');
 
     nextLevel = randomSpawnLevel();
-    aimX = clamp(aimX, DINOS[nextLevel].r, WORLD_WIDTH - DINOS[nextLevel].r);
+    aimX = clamp(
+      aimX,
+      DINOS[nextLevel].r,
+      WORLD_WIDTH - DINOS[nextLevel].r
+    );
+
     updateScoreUI();
     updatePreview();
+    requestRender();
   }
 
   el.restart.addEventListener('click', restart);
 
-  function init() {
-    measure();
-    aimX = WORLD_WIDTH / 2;
-    nextLevel = randomSpawnLevel();
-    updatePreview();
-    updateScoreUI();
-
-    const runner = Runner.create();
-    Runner.run(runner, engine);
-    requestAnimationFrame(draw);
-
-    loadLeaderboard();
-  }
-
-  let resizeFrame = 0;
-
+  // ================= RESIZE И ПОВОРОТ =================
   function scheduleMeasure() {
-    window.cancelAnimationFrame(resizeFrame);
-    resizeFrame = window.requestAnimationFrame(measure);
+    if (resizeFrame) {
+      window.cancelAnimationFrame(resizeFrame);
+    }
+
+    resizeFrame = window.requestAnimationFrame(() => {
+      resizeFrame = 0;
+      measure();
+    });
   }
 
   window.addEventListener('resize', scheduleMeasure, { passive: true });
@@ -716,6 +787,26 @@
   if ('ResizeObserver' in window) {
     const resizeObserver = new ResizeObserver(scheduleMeasure);
     resizeObserver.observe(el.area);
+  }
+
+  // ================= СТАРТ =================
+  function init() {
+    measure();
+
+    wallBodies = createWalls();
+    Composite.add(engine.world, wallBodies);
+
+    aimX = WORLD_WIDTH / 2;
+    nextLevel = randomSpawnLevel();
+
+    updatePreview();
+    updateScoreUI();
+
+    const runner = Runner.create();
+    Runner.run(runner, engine);
+
+    requestRender();
+    loadLeaderboard();
   }
 
   init();
