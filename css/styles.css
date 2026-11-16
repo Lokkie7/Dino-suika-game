@@ -644,3 +644,45 @@ input:focus-visible {
     transform: translate(-50%, -50%);
   }
 }
+
+@media (max-width: 700px) {
+  .header {
+    width: calc(100% - 2 * var(--page-gutter));
+    min-height: 72px;
+  }
+
+  .game-main-content {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "game"
+      "score"
+      "clue";
+    justify-items: center;
+    gap: 16px;
+    padding-top: 16px;
+  }
+
+  .glass-play-box {
+    width: min(100%, 500px);
+    aspect-ratio: 500 / 640;
+    min-width: 0;
+  }
+
+  .scoreboard {
+    width: min(100%, 500px);
+  }
+
+  .game-clues {
+    width: min(100%, 500px);
+  }
+
+  .game-clues img {
+    width: min(100%, 280px);
+    max-height: 320px;
+  }
+
+  .game-footer {
+    justify-content: center;
+  }
+}
+
