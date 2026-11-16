@@ -1,109 +1,110 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dino game</title>
-    <meta name="description" content="Dino suika game">
-    <link rel="stylesheet" href="css/styles.css">
-    <link rel="shortcut icon" href="favicon.png" type="image/x-icon">
-    <link rel="icon" href="favicon.png" type="image/x-icon">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Dino suika game">
+  <meta name="theme-color" content="#E0C37F">
+  <title>Dino game</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="shortcut icon" href="favicon.png" type="image/x-icon">
+  <link rel="icon" href="favicon.png" type="image/x-icon">
 </head>
 <body>
-    <div class="dino-game" >
-
+  <div class="dino-game">
     <header class="header">
-        <!-- Левая часть -->
-        <div class="header-left">
-        <div class="text-wrapper" >ДиноGame</div> 
-        <div class="div" >Cчастливый динозавр</div>
-        </div>
-        <!-- Правая часть -->
-        <div class="replay-button" >
-            <div class="text-wrapper-3" >↻</div>
-            <div class="text-wrapper-4" >Рестарт</div>
-    </div>
+      <div class="header-left">
+        <div class="text-wrapper">ДиноGame</div>
+        <div class="div">Cчастливый динозавр</div>
+      </div>
+
+      <button class="replay-button" type="button" aria-label="Начать игру заново">
+        <span class="text-wrapper-3" aria-hidden="true">↻</span>
+        <span class="text-wrapper-4">Рестарт</span>
+      </button>
     </header>
-    <!-- ОСНОВНАЯ ЧАСТЬ СТРАНИЦЫ -->
-<main class="game-main-content">
-    <!-- 1. ДОСКА РЕЗУЛЬТАТОВ И СЧЕТА -->
-    <section class="scoreboard">
-  <div class="scores-grid">
-    <div class="score-pair">
-      <div class="current-score">
-        <div class="text-wrapper-6">Текущий счёт</div>
-        <div class="text-wrapper-7">1,280</div>
-        <div class="text-wrapper-8">Продолжай!</div>
-      </div>
 
-      <div class="best-score">
-        <div class="text-wrapper-9">Лучший счёт</div>
-        <div class="text-wrapper-10">2,460</div>
-      </div>
-    </div>
+    <main class="game-main-content">
+      <section class="glass-play-box" aria-label="Игровое поле">
+        <div class="glass-base-shadow" aria-hidden="true"></div>
+        <div class="transparent-glass" aria-hidden="true"></div>
+        <div class="inner-glass-edge" aria-hidden="true"></div>
+        <div class="left-glass" aria-hidden="true"></div>
+        <div class="right-glass" aria-hidden="true"></div>
+        <div class="glass-rim" aria-hidden="true"></div>
 
-    <div class="next-dino">
-      <div class="text-wrapper-12">Следующий</div>
-      <div class="text-wrapper-13">Диллофозавр</div>
-      <div class="text-wrapper-14">Ночной кошмар.</div>
-      <div class="dino-preview"></div>
-    </div>
-  </div>
-
-  <div class="leaderboard">
-    <div class="leaderboard__content">
-      <h2>Таблица лидеров</h2>
-
-      <form id="score-form">
-        <input
-          id="player-name"
-          type="text"
-          maxlength="20"
-          placeholder="Ваше имя"
-          required
+        <img
+          class="dino-limit-dotted"
+          src="images/dotted-line.png"
+          alt=""
+          aria-hidden="true"
         >
-        <button type="submit">Сохранить счёт</button>
-      </form>
+        <div class="text-wrapper-16" aria-hidden="true">не заходи за черту</div>
 
-      <p id="leaderboard-message" aria-live="polite"></p>
-      <ol id="leaderboard-list"></ol>
-    </div>
-  </div>
-</section>
-
-    <section class="glass-play-box">
-        <!-- Тени и стеклянные элементы декора -->
-        <div class="glass-base-shadow"></div>
-        <div class="transparent-glass"></div>
-        <div class="inner-glass-edge"></div>
-        <div class="left-glass"></div>
-        <div class="right-glass"></div>
-        <div class="glass-rim"></div>
-
-        <!-- Ограничитель (dotted line) -->
-        <img class="dino-limit-dotted" src="images/dotted-line.png" alt="limit line">
-        <div class="text-wrapper-16">не заходи за черту</div>
-        <!-- Зона, куда падают динозавры (сюда будет смотреть Engine/Render из Matter.js) -->
-        <div class="game-canvas-area">
+        <div class="game-canvas-area" aria-label="Управление: перемещайте указатель и нажимайте, чтобы сбросить динозавра. На клавиатуре используются стрелки и пробел.">
           <div class="danger-countdown" aria-live="assertive" aria-atomic="true"></div>
         </div>
-    </section>
+      </section>
 
-    <section class="game-clues">
-        <img src="images/clue2.png" alt="Подсказка">
-    </section>
+      <section class="scoreboard" aria-label="Счёт и таблица лидеров">
+        <div class="scores-grid">
+          <div class="score-pair">
+            <div class="current-score">
+              <div class="text-wrapper-6">Текущий счёт</div>
+              <div class="text-wrapper-7" aria-live="polite" aria-atomic="true">0</div>
+              <div class="text-wrapper-8" aria-live="polite">Продолжай!</div>
+            </div>
 
-    
-</main>
-<footer class="game-footer">
-  <span>Создано</span>
-  <span class="game-footer__name">Lokkie7</span>
-  <span class="game-footer__year">© 2026</span>
+            <div class="best-score">
+              <div class="text-wrapper-9">Лучший счёт</div>
+              <div class="text-wrapper-10">0</div>
+            </div>
+          </div>
 
-</footer>
-<!-- Подключение JavaScript -->
+          <div class="next-dino">
+            <div class="next-dino__text">
+              <div class="text-wrapper-12">Следующий</div>
+              <div class="text-wrapper-13">Динозавр</div>
+              <div class="text-wrapper-14"></div>
+            </div>
+            <div class="dino-preview" aria-hidden="true"></div>
+          </div>
+        </div>
+
+        <div class="leaderboard">
+          <div class="leaderboard__content">
+            <h2>Таблица лидеров</h2>
+            <form id="score-form">
+              <input
+                id="player-name"
+                type="text"
+                maxlength="20"
+                placeholder="Ваше имя"
+                autocomplete="name"
+                required
+              >
+              <button type="submit">Сохранить счёт</button>
+            </form>
+            <p id="leaderboard-message" aria-live="polite"></p>
+            <ol id="leaderboard-list"></ol>
+          </div>
+        </div>
+      </section>
+
+      <section class="game-clues" aria-label="Подсказка">
+        <img src="images/clue2.png" alt="Подсказка по игре">
+      </section>
+    </main>
+
+    <footer class="game-footer">
+      <span>Создано</span>
+      <span class="game-footer__name">Lokkie7</span>
+      <span class="game-footer__year">© 2026</span>
+    </footer>
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="js/matter.min.js"></script>
     <script src="js/script.js"></script>
+  </div>
 </body>
 </html>

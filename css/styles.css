@@ -1,601 +1,189 @@
-/* styles.css */
+:root {
+  color-scheme: light;
+  --light-green: #d4dfbe;
+  --yellow: #f1d58b;
+  --ink: #455b3d;
+  --muted-ink: #7c896d;
+  --page-gutter: clamp(12px, 3vw, 32px);
+  --focus-ring: 0 0 0 3px rgba(69, 91, 61, 0.4);
+}
 
-/* 1. Растягиваем корневые элементы */
-html, body {
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  min-width: 0;
+  min-height: 100%;
   margin: 0;
-  padding: 0;
-  min-height: 100%;          /* вместо height: 100% */
+  background: #e0c37f;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
-/* 2. Стили вашего игрового блока */
+body {
+  min-width: 0;
+  min-height: 100%;
+  margin: 0;
+  overflow-x: hidden;
+  font-family: "Nunito", Arial, sans-serif;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+button:focus-visible,
+input:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
 .dino-game {
-  position: relative;        /* теперь header/footer/sunshine привязаны к нему */
+  display: flex;
   min-height: 100vh;
-  min-height: 100dvh;        /* корректная высота на мобильных */
-  display: flex;
+  min-height: 100dvh;
   flex-direction: column;
-  background-color: #E0C37F;
-  overflow-x: hidden;        /* скроллим только по вертикали, без обрезки */
-  box-sizing: border-box;
+  overflow-x: clip;
+  padding:
+    env(safe-area-inset-top, 0px)
+    env(safe-area-inset-right, 0px)
+    env(safe-area-inset-bottom, 0px)
+    env(safe-area-inset-left, 0px);
+  background-color: #e0c37f;
 }
 
-/* Если у вас есть вложенный блок soft-sunshine, который тоже должен быть на весь экран */
-
-.dino-game .header {
-  position: relative;        /* было absolute */
-  width: min(1312px, calc(100% - 64px));
-  margin: 20px auto 0;
-  height: 92px;
+.header {
   display: flex;
-  justify-content: space-between;
+  width: min(1312px, calc(100% - 2 * var(--page-gutter)));
+  min-height: 92px;
+  flex: 0 0 auto;
   align-items: center;
-  padding: 0 32px;
-  box-sizing: border-box;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 12px auto 0;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(69, 91, 61, 0.15);
 }
 
-.dino-game .header-left { 
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start; 
+.header-left {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
-.dino-game .text-wrapper {
-    font-family: "Quicksand", Helvetica;
-    font-weight: 700;
-    color: #455b3d;
-    font-size: 44px;
-    letter-spacing: 0;
-    line-height: normal;
+.text-wrapper {
+  color: var(--ink);
+  font-family: "Quicksand", Arial, sans-serif;
+  font-size: clamp(28px, 4vw, 44px);
+  font-weight: 700;
+  line-height: 1.1;
 }
 
-.dino-game .div {
-    font-family: "Nunito", Helvetica;
-    font-weight: 700;
-    color: #7c896d;
-    font-size: 11px;
-    letter-spacing: 2px;
-    line-height: normal;
-    margin: 4px 0 0 2px;
+.div {
+  margin: 4px 0 0 2px;
+  color: var(--muted-ink);
+  font-family: "Nunito", Arial, sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
 }
 
-.dino-game .replay-button {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background-color: #edbe8d;
-    border-radius: 26px;
-    padding: 0 24px;
-    height: 52px;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
+.replay-button {
+  display: inline-flex;
+  min-width: 112px;
+  min-height: 48px;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 18px;
+  border: 0;
+  border-radius: 26px;
+  background-color: #edbe8d;
+  color: var(--ink);
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: background-color 0.2s ease;
 }
 
-.dino-game .replay-button:hover { 
-    background-color: #e0b07f; 
+.replay-button:hover {
+  background-color: #e0b07f;
 }
 
-.dino-game .text-wrapper-3 {
-    font-family: "Nunito", Helvetica;
-    font-weight: 700;
-    color: #455b3d;
-    font-size: 24px;
-    line-height: normal;
-    margin: 0;
+.text-wrapper-3 {
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1;
 }
 
-.dino-game .text-wrapper-4 {
-    font-family: "Nunito", Helvetica;
-    font-weight: 700;
-    color: #455b3d;
-    font-size: 17px;
-    line-height: normal;
-    margin: 0;
+.text-wrapper-4 {
+  font-size: 16px;
+  font-weight: 700;
 }
 
 .game-main-content {
-  flex: 1;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
-  grid-template-rows: auto;  /* не 100vh */
+  width: min(1312px, 100%);
+  min-width: 0;
+  flex: 1 0 auto;
+  grid-template-columns: minmax(0, 500px) minmax(240px, 360px) minmax(0, 1fr);
+  grid-template-areas: "game score clue";
   align-items: center;
-  gap: 24px;
-  padding: 24px 32px 16px;
-  box-sizing: border-box;
-  /* убрать min-height: 100vh и grid-template-rows: 100vh */
+  justify-content: center;
+  gap: clamp(12px, 2vw, 24px);
+  margin: 0 auto;
+  padding: 24px var(--page-gutter) 16px;
 }
 
-section { /* Чтобы секции не схлопывались и имели фон, если он нужен */ 
-    display: flex; 
-    align-items: center; 
-    justify-content: center; 
-    padding: 15px; 
-    border-radius: 8px; 
-    color: #fff; 
-    font-family: sans-serif; }
-
-.scoreboard {
-  justify-self: end;         /* прижимаем к игре */
-  align-self: center;
-  margin: 0;                 /* убрано margin-bottom: 48px */
-  pointer-events: none;
-  user-select: none;
-  -webkit-user-drag: none;
-  -webkit-user-select: none;
+.game-main-content > section {
+  min-width: 0;
+  margin: 0;
+  color: var(--ink);
+  font-family: Arial, sans-serif;
 }
 
-.current-score,
-.best-score,
-.next-dino {
-    padding: 16px;
-    border-radius: 16px;
-    color: #455b3d;
-}
-
-.current-score {
-    background-color: var(--light-green);
-}
-
-.best-score {
-    background-color: var(--yellow);
-}
-
-.next-dino {
-  width: 100%;               /* было 300px */
-  min-height: 130px;         /* было height: 130px */
-  min-width: 250px;
-  background-color: #e0b07f;
-  border: 1px solid var(--light-green);
-  overflow: hidden;
-}
-
-.text-wrapper-6 { /* SCORE */
-    font-size: 14px;
-    opacity: 0.8;
-}
-
-.text-wrapper-7 { /* Число очков */
-    font-size: 48px;
-    font-weight: bold;
-}
-
-.text-wrapper-8 { /* Продолжай! */
-    font-size: 14px;
-    opacity: 0.8;
-}
-
-.text-wrapper-9 { /* Лучший счёт */
-    font-size: 14px;
-    opacity: 0.8;
-}
-
-.text-wrapper-10 { /* Рекорд */
-    font-size: 48px;
-    font-weight: bold;
-}
-
-.text-wrapper-12 { /* Следующий */
-    font-size: 14px;
-    opacity: 0.8;
-}
-
-.text-wrapper-13 { /* Диллофозавр */
-    font-size: 24px;
-    font-weight: bold;
-}
-
-.text-wrapper-14 { /* Ночной кошмар */
-    font-size: 14px;
-    opacity: 0.8;
-}
-
-.dino-preview {
-    height: 48px;
-    aspect-ratio: 1 / 1;
-    background-color: pink; /* Замените на реальный SVG или картинку */
-    border-radius: 50%;
-}
-
-.p {
-    font-size: 14px;
-    opacity: 0.8;
-}
-
-
-/* 2. Основной контейнер стеклянной коробки */
 .glass-play-box {
-  position: relative;        /* было top/bottom 10vh — убрано */
-  width: min(500px, 90vw);
-  height: min(640px, 70vh);
-  border-radius: 20px;
+  position: relative;
+  isolation: isolate;
+  grid-area: game;
+  width: 100%;
+  max-width: 500px;
+  aspect-ratio: 500 / 640;
+  min-height: 0;
   overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 20px;
   background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
   -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
 }
 
-/* 3. Внутренняя зона игры (куда падает Canvas) */
 .game-canvas-area {
-    position: absolute;
-    bottom: 80px; /* Отступ снизу для надписи и черты */
-    left: 20px;
-    right: 20px;
-    top: 20px;
-    
-    /* Чтобы видеть границы при разработке */
-    background: rgba(0, 0, 0, 0.05); 
-    border-radius: 15px;
-    border: 1px dashed rgba(255, 255, 255, 0.1);
-    user-select: none;
-    -webkit-user-select: none;
-}
-
-/* 4. Стеклянный ободок сверху (имитация толщины стекла) */
-.glass-rim {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 10px;
-    background: rgba(255, 255, 255, 0.2);
-    border-top-left-radius: 20px;
-    border-top-right-radius: 20px;
-}
-
-/* 5. Левая и правая грани (для 3D-объема) */
-.left-glass, .right-glass {
-    position: absolute;
-    top: 10px; /* Ниже обода */
-    bottom: 80px;
-    width: 15px;
-    background: rgba(255, 255, 255, 0.1);
-}
-.left-glass { left: 0; border-top-left-radius: 15px; border-bottom-left-radius: 15px; }
-.right-glass { right: 0; border-top-right-radius: 15px; border-bottom-right-radius: 15px; }
-
-/* 6. Внутренняя фаска (блик внутри коробки) */
-.inner-glass-edge {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    right: 20px;
-    bottom: 70px;
-    pointer-events: none; /* Чтобы не мешал кликам по игре */
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 15px;
-    box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.1);
-}
-
-/* 7. Базовая тень (под коробкой) */
-.glass-base-shadow {
-    position: absolute;
-    bottom: -30px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 95%;
-    height: 40px;
-    background: radial-gradient(circle, rgba(0,0,0,0.4) 0%, transparent 60%);
-    border-radius: 50%;
-    filter: blur(20px);
-    z-index: -1;
-}
-
-/* 8. Прозрачный слой (если нужен как отдельный декор) */
-.transparent-glass {
-    position: absolute;
-    inset: 0;
-    background: transparent;
-}
-
-/* 9. Ограничитель (dotted line) */
-.dino-limit-dotted {
-    position: absolute;
-    top: 60px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 90%;
-    height: 10px;
-    pointer-events: none;
-    user-select: none;
-    -webkit-user-drag: none;
-    -webkit-user-select: none;
-}
-
-/* 10. Текст предупреждения */
-.text-wrapper-16 {
-    position: absolute;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    color: rgba(255, 255, 255, 0.8);
-    font-size: 14px;
-    font-family: sans-serif;
-    text-align: center;
-    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
-    pointer-events: none;
-    user-select: none;
-    -webkit-user-drag: none;
-    -webkit-user-select: none;
-}
-
-.game-clues {
-  width: min(400px, 100%);
-  aspect-ratio: 1 / 1;       /* вместо height: 400px */
-  margin: 0;                 /* убраны margin-top: 25vh */
-  justify-self: start;
-  pointer-events: none;
+  position: absolute;
+  inset: 20px 20px 80px;
+  overflow: hidden;
+  border: 1px dashed rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  background: rgba(0, 0, 0, 0.05);
+  touch-action: none;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
   user-select: none;
-  -webkit-user-drag: none;
   -webkit-user-select: none;
 }
 
-.game-clues img {
-  display: block;
-  max-width: 100%;
-  max-height: 140%;
-  object-fit: contain;
-}
-
-.game-footer {
-  display: flex;
-  justify-content: flex-end;  /* вместо position: absolute */
-  align-items: center;
-  gap: 8px;
-  padding: 16px 32px 24px;
-  color: #7c896d;
-  font-family: "Nunito", sans-serif;
-  font-size: 14px;
-}
-
-.game-footer__name {
-  color: #455b3d;
-  font-weight: 700;
-}
-
-.game-footer__year {
-  margin-left: 4px;
-  opacity: 0.7;
-}
-
-
-/* ---------- 7. Адаптивность ---------- */
-@media (max-width: 1100px) {
-  .game-main-content {
-    grid-template-columns: 1fr;   /* колонки друг под другом */
-    justify-items: center;
-    padding: 16px;
-  }
-  .scoreboard,
-  .game-clues {
-    justify-self: center;
-  }
-  .game-clues {
-    width: min(260px, 70vw);
-  }
-  .dino-game .header {
-    width: calc(100% - 32px);
-    padding: 0 16px;
-  }
-}
-
-@media (max-width: 600px) {
-  .dino-game .header {
-    height: auto;
-    flex-wrap: wrap;
-    gap: 12px;
-    padding: 12px 16px;
-  }
-  .dino-game .text-wrapper {
-    font-size: 32px;
-  }
-  .glass-play-box {
-    height: 560px;
-  }
-}
-
-.dino-game .header {
-  flex-shrink: 0;
-}
-
-/* Отделяем шапку от тела визуально */
-.dino-game .header {
-  border-bottom: 1px solid rgba(69, 91, 61, 0.15);
-}
-
-/* Отступ сверху у основного контента */
-.game-main-content {
-  padding-top: 24px;
-}
-
-@media (max-width: 600px) {
-  .dino-game .header {
-    height: auto;          /* уже было, оставляем */
-    min-height: 92px;      /* не ниже базовой высоты */
-    margin: 12px 16px 0;   /* отступ от краёв экрана */
-    flex-shrink: 0;
-    align-items: flex-start;
-    row-gap: 12px;
-  }
-
-  .dino-game .replay-button {
-    align-self: flex-end;  /* кнопка справа под заголовком */
-  }
-
-  .game-main-content {
-    padding: 24px 16px 16px;
-    gap: 16px;             /* зазор между блоками */
-  }
-}
-
-.game-canvas-area,
 .game-canvas-area canvas {
+  display: block;
   -webkit-tap-highlight-color: transparent;
   -webkit-touch-callout: none;
   user-select: none;
   -webkit-user-select: none;
-}
-
-.glass-play-box,
-.glass-play-box img,
-.glass-play-box .text-wrapper-16 {
-  -webkit-tap-highlight-color: transparent;
-  -webkit-touch-callout: none;
-  user-select: none;
-  -webkit-user-select: none;
-}
-
-.leaderboard {
-  align-self: center;
-  width: min(320px, 100%);
-  box-sizing: border-box;
-  padding: 20px;
-  border-radius: 16px;
-  color: #455b3d;
-  background: rgba(255, 255, 255, 0.45);
-}
-
-.leaderboard__content {
-  width: 100%;
-}
-
-.leaderboard h2 {
-  margin: 0 0 14px;
-  font-family: "Nunito", sans-serif;
-}
-
-#score-form {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-#player-name {
-  flex: 1 1 140px;
-  min-width: 0;
-  padding: 10px;
-  border: 1px solid #7c896d;
-  border-radius: 8px;
-}
-
-#score-form button {
-  padding: 10px 14px;
-  border: 0;
-  border-radius: 8px;
-  color: #455b3d;
-  background: #edbe8d;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-#leaderboard-list {
-  padding-left: 24px;
-}
-
-#leaderboard-message {
-  min-height: 1.2em;
-  font-size: 14px;
-}
-
-.scoreboard {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  justify-self: end;
-  gap: 16px;
-  width: min(360px, 100%);
-  box-sizing: border-box;
-  pointer-events: auto;
-}
-
-.scores-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  width: 100%;
-}
-
-.score-pair {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: 10px;
-}
-
-.current-score,
-.best-score {
-  min-width: 0;
-  padding: 12px;
-  box-sizing: border-box;
-}
-
-.text-wrapper-7,
-.text-wrapper-10 {
-  font-size: clamp(24px, 3vw, 38px);
-}
-
-.next-dino {
-  width: 100%;
-  min-width: 0;
-  box-sizing: border-box;
-}
-
-.leaderboard {
-  width: 100%;
-  box-sizing: border-box;
-  padding: 16px;
-  border-radius: 16px;
-  color: #455b3d;
-  background: rgba(255, 255, 255, 0.45);
-}
-
-.leaderboard__content {
-  width: 100%;
-}
-
-.leaderboard h2 {
-  margin: 0 0 12px;
-  font-family: "Nunito", sans-serif;
-}
-
-#score-form {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-#player-name {
-  flex: 1 1 130px;
-  min-width: 0;
-  padding: 10px;
-  border: 1px solid #7c896d;
-  border-radius: 8px;
-  box-sizing: border-box;
-}
-
-#score-form button {
-  padding: 10px 12px;
-  border: 0;
-  border-radius: 8px;
-  color: #455b3d;
-  background: #edbe8d;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-#leaderboard-list {
-  padding-left: 24px;
-}
-
-#leaderboard-message {
-  min-height: 1.2em;
-  font-size: 14px;
-}
-
-@media (max-width: 1100px) {
-  .scoreboard {
-    justify-self: center;
-    width: min(420px, 100%);
-  }
 }
 
 .danger-countdown {
@@ -603,17 +191,13 @@ section { /* Чтобы секции не схлопывались и имели
   z-index: 2;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%) scale(0.7);
-
   color: #fff7dc;
-  font: 800 clamp(64px, 16vw, 110px) / 1 "Nunito", sans-serif;
+  font: 800 clamp(64px, 16vw, 110px) / 1 "Nunito", Arial, sans-serif;
   text-align: center;
-  text-shadow:
-    0 4px 0 #a84f3d,
-    0 8px 20px rgba(69, 30, 20, 0.4);
-
+  text-shadow: 0 4px 0 #a84f3d, 0 8px 20px rgba(69, 30, 20, 0.4);
   opacity: 0;
   pointer-events: none;
+  transform: translate(-50%, -50%) scale(0.7);
 }
 
 .danger-countdown.is-active {
@@ -622,9 +206,307 @@ section { /* Чтобы секции не схлопывались и имели
 
 .danger-countdown.is-urgent {
   color: #fff0a8;
-  text-shadow:
-    0 4px 0 #b83232,
-    0 8px 24px rgba(130, 20, 20, 0.55);
+  text-shadow: 0 4px 0 #b83232, 0 8px 24px rgba(130, 20, 20, 0.55);
+}
+
+.dino-limit-dotted {
+  position: absolute;
+  z-index: 1;
+  top: 60px;
+  left: 50%;
+  display: block;
+  width: 90%;
+  height: 10px;
+  object-fit: fill;
+  pointer-events: none;
+  transform: translateX(-50%);
+  user-select: none;
+  -webkit-user-drag: none;
+  -webkit-user-select: none;
+}
+
+.text-wrapper-16 {
+  position: absolute;
+  z-index: 1;
+  top: 20px;
+  left: 50%;
+  width: max-content;
+  max-width: calc(100% - 24px);
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 14px;
+  text-align: center;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  pointer-events: none;
+  transform: translateX(-50%);
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.glass-rim {
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 10px;
+  border-radius: 20px 20px 0 0;
+  background: rgba(255, 255, 255, 0.2);
+  pointer-events: none;
+}
+
+.left-glass,
+.right-glass {
+  position: absolute;
+  z-index: 2;
+  top: 10px;
+  bottom: 80px;
+  width: 15px;
+  background: rgba(255, 255, 255, 0.1);
+  pointer-events: none;
+}
+
+.left-glass {
+  left: 0;
+  border-radius: 15px 0 0 15px;
+}
+
+.right-glass {
+  right: 0;
+  border-radius: 0 15px 15px 0;
+}
+
+.inner-glass-edge {
+  position: absolute;
+  z-index: 2;
+  inset: 20px 20px 70px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.1);
+  pointer-events: none;
+}
+
+.glass-base-shadow {
+  position: absolute;
+  z-index: -1;
+  bottom: -30px;
+  left: 50%;
+  width: 95%;
+  height: 40px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0, 0, 0, 0.4) 0%, transparent 60%);
+  filter: blur(20px);
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.transparent-glass {
+  position: absolute;
+  inset: 0;
+  background: transparent;
+  pointer-events: none;
+}
+
+.scoreboard {
+  display: flex;
+  grid-area: score;
+  width: 100%;
+  min-width: 0;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 16px;
+}
+
+.scores-grid {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.score-pair {
+  display: grid;
+  min-width: 0;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.current-score,
+.best-score,
+.next-dino {
+  min-width: 0;
+  padding: 12px;
+  overflow: hidden;
+  border-radius: 16px;
+  color: var(--ink);
+}
+
+.current-score {
+  background-color: var(--light-green);
+}
+
+.best-score {
+  background-color: var(--yellow);
+}
+
+.text-wrapper-6,
+.text-wrapper-9,
+.text-wrapper-12 {
+  font-size: 14px;
+  opacity: 0.8;
+}
+
+.text-wrapper-7,
+.text-wrapper-10 {
+  overflow-wrap: anywhere;
+  font-size: clamp(24px, 3vw, 38px);
+  font-weight: 700;
+}
+
+.text-wrapper-8,
+.text-wrapper-14 {
+  font-size: 14px;
+  opacity: 0.8;
+}
+
+.next-dino {
+  display: flex;
+  min-height: 112px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  border: 1px solid var(--light-green);
+  background-color: #e0b07f;
+}
+
+.next-dino__text {
+  min-width: 0;
+}
+
+.text-wrapper-13 {
+  overflow-wrap: anywhere;
+  font-size: clamp(18px, 2vw, 24px);
+  font-weight: 700;
+}
+
+.dino-preview {
+  width: clamp(44px, 6vw, 64px);
+  min-width: 44px;
+  aspect-ratio: 1;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background-color: transparent;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+.leaderboard {
+  width: 100%;
+  min-width: 0;
+  padding: 16px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.45);
+  color: var(--ink);
+}
+
+.leaderboard__content {
+  width: 100%;
+  min-width: 0;
+}
+
+.leaderboard h2 {
+  margin: 0 0 12px;
+  font-family: "Nunito", Arial, sans-serif;
+  font-size: 1.2rem;
+}
+
+#score-form {
+  display: flex;
+  min-width: 0;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+#player-name {
+  min-width: 0;
+  min-height: 44px;
+  flex: 1 1 130px;
+  padding: 10px;
+  border: 1px solid var(--muted-ink);
+  border-radius: 8px;
+  background: #fffdf7;
+}
+
+#score-form button {
+  min-height: 44px;
+  flex: 1 1 auto;
+  padding: 10px 12px;
+  border: 0;
+  border-radius: 8px;
+  background: #edbe8d;
+  color: var(--ink);
+  font-weight: 700;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+#score-form button:hover {
+  background: #e0b07f;
+}
+
+#leaderboard-message {
+  min-height: 1.2em;
+  overflow-wrap: anywhere;
+  font-size: 14px;
+}
+
+#leaderboard-list {
+  padding-left: 24px;
+  overflow-wrap: anywhere;
+}
+
+.game-clues {
+  display: flex;
+  grid-area: clue;
+  width: 100%;
+  min-width: 0;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.game-clues img {
+  display: block;
+  width: min(100%, 300px);
+  max-height: 420px;
+  object-fit: contain;
+  -webkit-user-drag: none;
+}
+
+.game-footer {
+  display: flex;
+  width: min(1312px, 100%);
+  min-height: 52px;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  margin: 0 auto;
+  padding: 12px var(--page-gutter) calc(16px + env(safe-area-inset-bottom, 0px));
+  color: var(--muted-ink);
+  font-size: 14px;
+}
+
+.game-footer__name {
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.game-footer__year {
+  margin-left: 4px;
+  opacity: 0.7;
 }
 
 @keyframes countdown-pop {
@@ -652,9 +534,112 @@ section { /* Чтобы секции не схлопывались и имели
   }
 }
 
+@media (max-width: 1100px) {
+  .game-main-content {
+    width: 100%;
+    grid-template-columns: minmax(0, 500px) minmax(0, 360px);
+    grid-template-areas:
+      "game score"
+      "clue score";
+    align-items: center;
+  }
+
+  .game-clues img {
+    width: min(100%, 220px);
+    max-height: 260px;
+  }
+}
+
+@media (max-width: 700px) {
+  .header {
+    width: calc(100% - 2 * var(--page-gutter));
+    min-height: 72px;
+  }
+
+  .game-main-content {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "game"
+      "score"
+      "clue";
+    justify-items: center;
+    gap: 16px;
+    padding-top: 16px;
+  }
+
+  .glass-play-box {
+    width: min(100%, 500px, calc((100dvh - 280px) * 500 / 640));
+    min-width: 0;
+  }
+
+  .scoreboard {
+    width: min(100%, 500px);
+  }
+
+  .game-clues {
+    width: min(100%, 500px);
+  }
+
+  .game-clues img {
+    width: min(100%, 280px);
+    max-height: 320px;
+  }
+
+  .game-footer {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 380px) {
+  :root {
+    --page-gutter: 12px;
+  }
+
+  .header {
+    gap: 8px;
+  }
+
+  .text-wrapper {
+    font-size: 28px;
+  }
+
+  .replay-button {
+    min-width: 104px;
+    padding-inline: 12px;
+  }
+
+  .score-pair {
+    gap: 8px;
+  }
+
+  .current-score,
+  .best-score {
+    padding: 10px;
+  }
+}
+
+@media (max-height: 700px) and (min-width: 701px) {
+  .game-main-content {
+    padding-top: 12px;
+    padding-bottom: 8px;
+  }
+
+  .glass-play-box {
+    width: min(100%, 500px, calc((100dvh - 190px) * 500 / 640));
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
   .danger-countdown.is-active {
-    animation: none;
     opacity: 1;
     transform: translate(-50%, -50%);
   }
