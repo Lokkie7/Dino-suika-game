@@ -39,7 +39,7 @@
   const WALL = 60;
   const DPR_LIMIT = 2;
 
-  // Звуки drop и land удалены по запросу.
+  // Звуки drop и land удалены - проверка лага
   const SOUND_FILES = {
     merge: 'sounds/melon.mp3',
     bigMerge: 'sounds/troodon.mp3',
@@ -52,7 +52,7 @@
     merge: 0.35,
     bigMerge: 0.65,
     countdown: 0.3,
-    gameOver: 0.55,
+    gameOver: 1,
     restart: 0.4
   };
 
@@ -64,18 +64,19 @@
     audioPool[name] = audio;
   }
 
-  function playSound(name) {
-    const audio = audioPool[name];
-    if (!audio) return;
+function playSound(name) {
+  const source = audioPool[name];
+  if (!source) return;
 
-    audio.pause();
-    audio.currentTime = 0;
-    audio.volume = SOUND_VOLUME[name] ?? 0.5;
+  const audio = source.cloneNode();
+  audio.volume = SOUND_VOLUME[name] ?? 0.5;
 
-    audio.play().catch((error) => {
+  audio.play().catch((error) => {
+    if (error.name !== 'AbortError') {
       console.warn(`Не удалось проиграть звук "${name}":`, error);
-    });
-  }
+    }
+  });
+}
 
   // ================= DOM =================
   const el = {
@@ -178,6 +179,9 @@
 
   let dangerStartedAt = null;
   let lastCountdownSecond = null;
+
+  let resizeFrame = 0;
+
 
   const mergeQueue = [];
 
@@ -336,38 +340,38 @@
   });
 
   function processMerges() {
-    while (mergeQueue.length) {
-      const { a, b } = mergeQueue.shift();
-      const level = a.dinoLevel;
+  while (mergeQueue.length) {
+    const { a, b } = mergeQueue.shift();
+    const level = a.dinoLevel;
 
-      Composite.remove(engine.world, a);
-      Composite.remove(engine.world, b);
+    Composite.remove(engine.world, a);
+    Composite.remove(engine.world, b);
 
-      const nextRadius =
-        level < MAX_LEVEL ? DINOS[level + 1].r : DINOS[level].r;
+    const nextLevel = level === MAX_LEVEL ? 0 : level + 1;
+    const radius = DINOS[nextLevel].r;
 
-      const x = clamp(
-        (a.position.x + b.position.x) / 2,
-        nextRadius,
-        WORLD_WIDTH - nextRadius
-      );
+    const x = clamp(
+      (a.position.x + b.position.x) / 2,
+      radius,
+      WORLD_WIDTH - radius
+    );
 
-      const y = clamp(
-        (a.position.y + b.position.y) / 2,
-        nextRadius,
-        WORLD_HEIGHT - nextRadius
-      );
+    const y = clamp(
+      (a.position.y + b.position.y) / 2,
+      radius,
+      WORLD_HEIGHT - radius
+    );
 
-      if (level === MAX_LEVEL) {
-        playSound('bigMerge');
-        addScore(DINOS[level].points * 2);
-      } else {
-        playSound('merge');
-        createDino(level + 1, x, y);
-        addScore(DINOS[level + 1].points);
-      }
-    }
+    createDino(nextLevel, x, y);
+
+    const points = level === MAX_LEVEL
+      ? DINOS[level].points * 2
+      : DINOS[level + 1].points;
+
+    addScore(points);
+    playSound(level === MAX_LEVEL ? 'bigMerge' : 'merge');
   }
+}
 
   // ================= ПРОВЕРКА ПРОИГРЫША =================
   function checkGameOver(now) {
@@ -755,4 +759,17 @@
   }
 
   init();
+  //=============ТЕСТИРОВАНИЕ==============
+  //window.testGameSound = (name = 'merge') => playSound(name);
+
+  //window.spawnBiggestDino = () => {
+  //const level = DINOS.length - 1;
+  //const radius = DINOS[level].r;
+  //const x = clamp(aimX, radius, WORLD_WIDTH - radius);
+
+  //return createDino(level, x, radius + 2);
+//};
+
+
+
 })();
