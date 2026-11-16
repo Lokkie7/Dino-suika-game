@@ -60,16 +60,28 @@
     restart: 0.4
   };
 
-  function playSound(name) {
-    const src = SOUND_FILES[name];
-    if (!src) return;
+const audioPool = {};
 
-    const audio = new Audio(src);
-    audio.volume = SOUND_VOLUME[name] ?? 0.5;
-    audio.play().catch((error) => {
-      console.warn(`Не удалось проиграть звук "${name}":`, error);
-    });
-  }
+for (const [name, src] of Object.entries(SOUND_FILES)) {
+  const audio = new Audio(src);
+  audio.preload = 'auto';
+  audioPool[name] = audio;
+}
+
+function playSound(name) {
+  const audio = audioPool[name];
+  if (!audio) return;
+
+  audio.pause();
+  audio.currentTime = 0;
+  audio.volume = SOUND_VOLUME[name] ?? 0.5;
+
+  audio.play().catch((error) => {
+    // На мобильных браузерах воспроизведение может быть запрещено
+    // до первого действия пользователя.
+    console.warn(`Не удалось проиграть звук "${name}":`, error);
+  });
+}
 
   // ================= DOM =================
   const el = {
