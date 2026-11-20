@@ -15,7 +15,7 @@
     { name: 'Птеранодон', desc: 'Парит в небе.', r: 30, color: '#cbd4c7', points: 3, sprite: 'images/dino2.webp' },
     { name: 'Велоцираптор', desc: 'Быстрый охотник.', r: 36, color: '#9db4f7', points: 6, sprite: 'images/dino3.webp' },
     { name: 'Пахицефалозавр', desc: 'Боньк.', r: 44, color: '#f2b29e', points: 10, sprite: 'images/dino4.webp' },
-    { name: 'Диллофозавр', desc: 'Ночной кошмар.', r: 52, color: '#f4d1e8', points: 15, sprite: 'images/dino5.webp' },
+    { name: 'Дилофозавр', desc: 'Ночной кошмар.', r: 52, color: '#f4d1e8', points: 15, sprite: 'images/dino5.webp' },
     { name: 'Тенонтозавр', desc: 'Лошадка.', r: 60, color: '#ecd3ad', points: 21, sprite: 'images/dino6.webp' },
     { name: 'Карнотавр', desc: 'Динозавр бык.', r: 68, color: '#edb1ad', points: 28, sprite: 'images/dino7.webp' },
     { name: 'Кентрозавр', desc: 'С костяными пластинами.', r: 76, color: '#ede1b7', points: 36, sprite: 'images/dino8.webp' },
@@ -686,7 +686,7 @@ function playSound(name) {
   function restart() {
     playSound('restart');
 
-    Composite.clear(engine.world, true);
+    Composite.clear(engine.world, false);
     mergeQueue.length = 0;
 
     wallBodies = createWalls();
@@ -759,17 +759,5 @@ function playSound(name) {
   }
 
   init();
-  //=============ТЕСТИРОВАНИЕ==============
-  //window.testGameSound = (name = 'merge') => playSound(name);
-
-  //window.spawnBiggestDino = () => {
-  //const level = DINOS.length - 1;
-  //const radius = DINOS[level].r;
-  //const x = clamp(aimX, radius, WORLD_WIDTH - radius);
-
-  //return createDino(level, x, radius + 2);
-//};
-
-
 
 })();
