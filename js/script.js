@@ -179,6 +179,7 @@ function playSound(name) {
 
   let dangerStartedAt = null;
   let lastCountdownSecond = null;
+  let victoryShown = false;
 
   let resizeFrame = 0;
 
@@ -370,8 +371,38 @@ function playSound(name) {
 
     addScore(points);
     playSound(level === MAX_LEVEL ? 'bigMerge' : 'merge');
+
+    if (level === MAX_LEVEL && !victoryShown) {
+      victoryShown = true;
+      showVictory();
+    }
   }
 }
+
+  // ================= ПОБЕДА =================
+  function showVictory() {
+    const overlay = document.createElement('div');
+    overlay.className = 'victory-overlay';
+    overlay.setAttribute('role', 'alert');
+    overlay.innerHTML = `
+      <div class="victory-box">
+        <div class="victory-title">🦖 Победа! 🦖</div>
+        <div class="victory-text">
+          Вы создали Брахиозавра — самого большого динозавра!
+        </div>
+        <div class="victory-subtext">
+          Но игра не окончена — продолжайте сливать динозавров и набирать очки!
+        </div>
+        <button class="victory-close" type="button">Продолжить</button>
+      </div>
+    `;
+
+    overlay.querySelector('.victory-close').addEventListener('click', () => {
+      overlay.remove();
+    });
+
+    document.body.appendChild(overlay);
+  }
 
   // ================= ПРОВЕРКА ПРОИГРЫША =================
   function checkGameOver(now) {
@@ -759,5 +790,13 @@ function playSound(name) {
   }
 
   init();
+  // ============= ТЕСТИРОВАНИЕ =============
+//  window.testGameSound = (name = 'merge') => playSound(name);
 
-})();
+//  window.spawnBiggestDino = () => {
+//    const level = DINOS.length - 1;
+//    const radius = DINOS[level].r;
+//    const x = clamp(WORLD_WIDTH / 2, radius, WORLD_WIDTH - radius);
+//    return createDino(level, x, radius + 2);
+//  };
+//})();
