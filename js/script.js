@@ -799,4 +799,4 @@ function playSound(name) {
 //    const x = clamp(WORLD_WIDTH / 2, radius, WORLD_WIDTH - radius);
 //    return createDino(level, x, radius + 2);
 //  };
-//})();
+})();
